@@ -66,6 +66,7 @@
     
     [self startBeatWithDuration:(60.0f / 120.0f)];
     
+    // fire up the audio
     [TSPulseGen sharedInstance];
 }
 
@@ -110,6 +111,10 @@
 
 - (void)beat
 {
+    // generate a pulse
+    [[TSPulseGen sharedInstance] pulse];
+    
+    // animate
     _vBeat.transform = CGAffineTransformIdentity;
     _vBeat.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
     [UIView animateWithDuration:0.1f animations:^{
