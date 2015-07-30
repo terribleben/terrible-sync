@@ -74,8 +74,6 @@
 		B5C387591B6AD1A90009A7CC = {
 			isa = PBXGroup;
 			children = (
-				B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */,
-				B5C387A61B6ADF060009A7CC /* AVFoundation.framework */,
 				B5C387641B6AD1A90009A7CC /* terrible-sync */,
 				B5C3877E1B6AD1A90009A7CC /* terrible-syncTests */,
 				B5C387631B6AD1A90009A7CC /* Products */,
@@ -101,6 +99,7 @@
 				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
 				B5C3879E1B6ADD630009A7CC /* audio */,
 				B5C387911B6AD2C00009A7CC /* supporting */,
+				B5C387B31B6AE5BC0009A7CC /* frameworks */,
 			);
 			path = "terrible-sync";
 			sourceTree = "<group>";
@@ -142,6 +141,16 @@
 				B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */,
 			);
 			path = audio;
+			sourceTree = "<group>";
+		};
+		B5C387B31B6AE5BC0009A7CC /* frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */,
+				B5C387A61B6ADF060009A7CC /* AVFoundation.framework */,
+			);
+			name = frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
