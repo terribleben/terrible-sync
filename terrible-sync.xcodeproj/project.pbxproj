@@ -1,0 +1,410 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B5C387731B6AD1A90009A7CC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5C387721B6AD1A90009A7CC /* Images.xcassets */; };
+		B5C387821B6AD1A90009A7CC /* terrible_syncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387811B6AD1A90009A7CC /* terrible_syncTests.m */; };
+		B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C3878C1B6AD2640009A7CC /* TSAppDelegate.m */; };
+		B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C3878E1B6AD2640009A7CC /* TSViewController.m */; };
+		B5C387981B6AD2C00009A7CC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387941B6AD2C00009A7CC /* main.m */; };
+		B5C3879D1B6AD2E10009A7CC /* TSLaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C3879B1B6AD2E10009A7CC /* TSLaunchScreen.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B5C3877C1B6AD1A90009A7CC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B5C3875A1B6AD1A90009A7CC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5C387611B6AD1A90009A7CC;
+			remoteInfo = "terrible-sync";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B5C387621B6AD1A90009A7CC /* terrible-sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "terrible-sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5C387721B6AD1A90009A7CC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B5C3877B1B6AD1A90009A7CC /* terrible-syncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "terrible-syncTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5C387801B6AD1A90009A7CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B5C387811B6AD1A90009A7CC /* terrible_syncTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = terrible_syncTests.m; sourceTree = "<group>"; };
+		B5C3878B1B6AD2640009A7CC /* TSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppDelegate.h; sourceTree = "<group>"; };
+		B5C3878C1B6AD2640009A7CC /* TSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppDelegate.m; sourceTree = "<group>"; };
+		B5C3878D1B6AD2640009A7CC /* TSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSViewController.h; sourceTree = "<group>"; };
+		B5C3878E1B6AD2640009A7CC /* TSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSViewController.m; sourceTree = "<group>"; };
+		B5C387941B6AD2C00009A7CC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B5C3879A1B6AD2E10009A7CC /* terrible-sync-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "terrible-sync-Info.plist"; sourceTree = "<group>"; };
+		B5C3879B1B6AD2E10009A7CC /* TSLaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TSLaunchScreen.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B5C3875F1B6AD1A90009A7CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B5C387781B6AD1A90009A7CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B5C387591B6AD1A90009A7CC = {
+			isa = PBXGroup;
+			children = (
+				B5C387641B6AD1A90009A7CC /* terrible-sync */,
+				B5C3877E1B6AD1A90009A7CC /* terrible-syncTests */,
+				B5C387631B6AD1A90009A7CC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B5C387631B6AD1A90009A7CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387621B6AD1A90009A7CC /* terrible-sync.app */,
+				B5C3877B1B6AD1A90009A7CC /* terrible-syncTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B5C387641B6AD1A90009A7CC /* terrible-sync */ = {
+			isa = PBXGroup;
+			children = (
+				B5C3878B1B6AD2640009A7CC /* TSAppDelegate.h */,
+				B5C3878C1B6AD2640009A7CC /* TSAppDelegate.m */,
+				B5C3878D1B6AD2640009A7CC /* TSViewController.h */,
+				B5C3878E1B6AD2640009A7CC /* TSViewController.m */,
+				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
+				B5C387911B6AD2C00009A7CC /* supporting */,
+			);
+			path = "terrible-sync";
+			sourceTree = "<group>";
+		};
+		B5C3877E1B6AD1A90009A7CC /* terrible-syncTests */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387811B6AD1A90009A7CC /* terrible_syncTests.m */,
+				B5C3877F1B6AD1A90009A7CC /* Supporting Files */,
+			);
+			path = "terrible-syncTests";
+			sourceTree = "<group>";
+		};
+		B5C3877F1B6AD1A90009A7CC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387801B6AD1A90009A7CC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B5C387911B6AD2C00009A7CC /* supporting */ = {
+			isa = PBXGroup;
+			children = (
+				B5C3879A1B6AD2E10009A7CC /* terrible-sync-Info.plist */,
+				B5C3879B1B6AD2E10009A7CC /* TSLaunchScreen.xib */,
+				B5C387941B6AD2C00009A7CC /* main.m */,
+			);
+			path = supporting;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B5C387611B6AD1A90009A7CC /* terrible-sync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5C387851B6AD1A90009A7CC /* Build configuration list for PBXNativeTarget "terrible-sync" */;
+			buildPhases = (
+				B5C3875E1B6AD1A90009A7CC /* Sources */,
+				B5C3875F1B6AD1A90009A7CC /* Frameworks */,
+				B5C387601B6AD1A90009A7CC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "terrible-sync";
+			productName = "terrible-sync";
+			productReference = B5C387621B6AD1A90009A7CC /* terrible-sync.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B5C3877A1B6AD1A90009A7CC /* terrible-syncTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5C387881B6AD1A90009A7CC /* Build configuration list for PBXNativeTarget "terrible-syncTests" */;
+			buildPhases = (
+				B5C387771B6AD1A90009A7CC /* Sources */,
+				B5C387781B6AD1A90009A7CC /* Frameworks */,
+				B5C387791B6AD1A90009A7CC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B5C3877D1B6AD1A90009A7CC /* PBXTargetDependency */,
+			);
+			name = "terrible-syncTests";
+			productName = "terrible-syncTests";
+			productReference = B5C3877B1B6AD1A90009A7CC /* terrible-syncTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B5C3875A1B6AD1A90009A7CC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = TS;
+				LastUpgradeCheck = 0640;
+				TargetAttributes = {
+					B5C387611B6AD1A90009A7CC = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					B5C3877A1B6AD1A90009A7CC = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = B5C387611B6AD1A90009A7CC;
+					};
+				};
+			};
+			buildConfigurationList = B5C3875D1B6AD1A90009A7CC /* Build configuration list for PBXProject "terrible-sync" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B5C387591B6AD1A90009A7CC;
+			productRefGroup = B5C387631B6AD1A90009A7CC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B5C387611B6AD1A90009A7CC /* terrible-sync */,
+				B5C3877A1B6AD1A90009A7CC /* terrible-syncTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B5C387601B6AD1A90009A7CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5C3879D1B6AD2E10009A7CC /* TSLaunchScreen.xib in Resources */,
+				B5C387731B6AD1A90009A7CC /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B5C387791B6AD1A90009A7CC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B5C3875E1B6AD1A90009A7CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */,
+				B5C387981B6AD2C00009A7CC /* main.m in Sources */,
+				B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B5C387771B6AD1A90009A7CC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5C387821B6AD1A90009A7CC /* terrible_syncTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B5C3877D1B6AD1A90009A7CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5C387611B6AD1A90009A7CC /* terrible-sync */;
+			targetProxy = B5C3877C1B6AD1A90009A7CC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		B5C387831B6AD1A90009A7CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B5C387841B6AD1A90009A7CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B5C387861B6AD1A90009A7CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "$(SRCROOT)/terrible-sync/supporting/terrible-sync-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B5C387871B6AD1A90009A7CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "$(SRCROOT)/terrible-sync/supporting/terrible-sync-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		B5C387891B6AD1A90009A7CC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "terrible-syncTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/terrible-sync.app/terrible-sync";
+			};
+			name = Debug;
+		};
+		B5C3878A1B6AD1A90009A7CC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "terrible-syncTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/terrible-sync.app/terrible-sync";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B5C3875D1B6AD1A90009A7CC /* Build configuration list for PBXProject "terrible-sync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5C387831B6AD1A90009A7CC /* Debug */,
+				B5C387841B6AD1A90009A7CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B5C387851B6AD1A90009A7CC /* Build configuration list for PBXNativeTarget "terrible-sync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5C387861B6AD1A90009A7CC /* Debug */,
+				B5C387871B6AD1A90009A7CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B5C387881B6AD1A90009A7CC /* Build configuration list for PBXNativeTarget "terrible-syncTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5C387891B6AD1A90009A7CC /* Debug */,
+				B5C3878A1B6AD1A90009A7CC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B5C3875A1B6AD1A90009A7CC /* Project object */;
+}
