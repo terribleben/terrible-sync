@@ -7,6 +7,7 @@
 //
 
 #import "TSViewController.h"
+#import "TSPulseGen.h"
 
 #define TS_NUM_BEATS_VIEWS 3
 #define TS_MIN_BPM 60.0f
@@ -64,6 +65,8 @@
     [self.view addSubview:_btnTap];
     
     [self startBeatWithDuration:(60.0f / 120.0f)];
+    
+    [TSPulseGen sharedInstance];
 }
 
 - (void)viewWillLayoutSubviews

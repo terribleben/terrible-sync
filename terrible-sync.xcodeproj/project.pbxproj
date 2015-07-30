@@ -13,6 +13,10 @@
 		B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C3878E1B6AD2640009A7CC /* TSViewController.m */; };
 		B5C387981B6AD2C00009A7CC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387941B6AD2C00009A7CC /* main.m */; };
 		B5C3879D1B6AD2E10009A7CC /* TSLaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C3879B1B6AD2E10009A7CC /* TSLaunchScreen.xib */; };
+		B5C387A51B6ADDF00009A7CC /* TSAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = B5C387A41B6ADDF00009A7CC /* TSAudio.mm */; };
+		B5C387A71B6ADF060009A7CC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C387A61B6ADF060009A7CC /* AVFoundation.framework */; };
+		B5C387AD1B6ADF3A0009A7CC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */; };
+		B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */ = {isa = PBXBuildFile; fileRef = B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +42,13 @@
 		B5C387941B6AD2C00009A7CC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B5C3879A1B6AD2E10009A7CC /* terrible-sync-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "terrible-sync-Info.plist"; sourceTree = "<group>"; };
 		B5C3879B1B6AD2E10009A7CC /* TSLaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TSLaunchScreen.xib; sourceTree = "<group>"; };
+		B5C387A21B6ADD9C0009A7CC /* TSAudioDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAudioDef.h; sourceTree = "<group>"; };
+		B5C387A31B6ADDF00009A7CC /* TSAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAudio.h; sourceTree = "<group>"; };
+		B5C387A41B6ADDF00009A7CC /* TSAudio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSAudio.mm; sourceTree = "<group>"; };
+		B5C387A61B6ADF060009A7CC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		B5C387AE1B6ADF9B0009A7CC /* TSPulseGen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPulseGen.h; sourceTree = "<group>"; };
+		B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSPulseGen.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +56,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5C387AD1B6ADF3A0009A7CC /* AudioToolbox.framework in Frameworks */,
+				B5C387A71B6ADF060009A7CC /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +74,8 @@
 		B5C387591B6AD1A90009A7CC = {
 			isa = PBXGroup;
 			children = (
+				B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */,
+				B5C387A61B6ADF060009A7CC /* AVFoundation.framework */,
 				B5C387641B6AD1A90009A7CC /* terrible-sync */,
 				B5C3877E1B6AD1A90009A7CC /* terrible-syncTests */,
 				B5C387631B6AD1A90009A7CC /* Products */,
@@ -84,6 +99,7 @@
 				B5C3878D1B6AD2640009A7CC /* TSViewController.h */,
 				B5C3878E1B6AD2640009A7CC /* TSViewController.m */,
 				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
+				B5C3879E1B6ADD630009A7CC /* audio */,
 				B5C387911B6AD2C00009A7CC /* supporting */,
 			);
 			path = "terrible-sync";
@@ -114,6 +130,18 @@
 				B5C387941B6AD2C00009A7CC /* main.m */,
 			);
 			path = supporting;
+			sourceTree = "<group>";
+		};
+		B5C3879E1B6ADD630009A7CC /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387A21B6ADD9C0009A7CC /* TSAudioDef.h */,
+				B5C387A31B6ADDF00009A7CC /* TSAudio.h */,
+				B5C387A41B6ADDF00009A7CC /* TSAudio.mm */,
+				B5C387AE1B6ADF9B0009A7CC /* TSPulseGen.h */,
+				B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */,
+			);
+			path = audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,9 +243,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */,
 				B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */,
 				B5C387981B6AD2C00009A7CC /* main.m in Sources */,
 				B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */,
+				B5C387A51B6ADDF00009A7CC /* TSAudio.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
