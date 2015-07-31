@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>5D946ED4-545E-4EE1-8C88-BB14600803F7</string>
 	<key>IDESourceControlProjectName</key>
-	<string>terrible-sync</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>BBB0F793106B9B0B5D0C1459D1B1ABC24E569493</key>
 		<string>https://github.com/terribleben/terrible-sync.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>terrible-sync.xcodeproj</string>
+	<string>terrible-sync.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>BBB0F793106B9B0B5D0C1459D1B1ABC24E569493</key>

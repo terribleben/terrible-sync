@@ -29,6 +29,8 @@
     if (self = [super init]) {
         dtmLastTap = 0;
         dtmLastLastTap = 0;
+        _isAlarmed = NO;
+        _isConfused = NO;
         self.currentBeatDuration = @(0);
     }
     return self;
@@ -112,7 +114,15 @@
     [self stop];
     
     // don't use a repeating timer because the duration could change between timer fires.
-    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:self.currentBeatDuration.floatValue target:self selector:@selector(beat) userInfo:nil repeats:NO];
+    NSTimeInterval untilNextBeat = self.currentBeatDuration.floatValue;
+    if (_isAlarmed) {
+        untilNextBeat *= 0.5f;
+    }
+    if (_isConfused) {
+        float randf = (float)rand() / (float)RAND_MAX;
+        untilNextBeat *= (0.7f + (0.6f * randf));
+    }
+    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:untilNextBeat target:self selector:@selector(beat) userInfo:nil repeats:NO];
 }
 
 @end

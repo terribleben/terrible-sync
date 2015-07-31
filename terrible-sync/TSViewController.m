@@ -30,6 +30,8 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)onTapBeat;
 - (void)onTapTempoUp;
 - (void)onTapTempoDown;
+- (void)onTapConfused;
+- (void)onTapAlarmed;
 
 @end
 
@@ -102,12 +104,14 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     self.btnConfused = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnConfused.frame = CGRectMake(0, 0, 66.0f, 66.5f);
     [_btnConfused setImage:[UIImage imageNamed:@"btn_question"] forState:UIControlStateNormal];
+    [_btnConfused addTarget:self action:@selector(onTapConfused) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_btnConfused];
     
     // alarmed button
     self.btnAlarmed = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnAlarmed.frame = CGRectMake(0, 0, 66.0f, 66.5f);
     [_btnAlarmed setImage:[UIImage imageNamed:@"btn_bang"] forState:UIControlStateNormal];
+    [_btnAlarmed addTarget:self action:@selector(onTapAlarmed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_btnAlarmed];
     
     // fire up the audio
@@ -186,6 +190,16 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)onTapTempoDown
 {
     [_clock decreaseCurrentBPM];
+}
+
+- (void)onTapAlarmed
+{
+    _clock.isAlarmed = !_clock.isAlarmed;
+}
+
+- (void)onTapConfused
+{
+    _clock.isConfused = !_clock.isConfused;
 }
 
 @end

@@ -25,6 +25,8 @@
 @interface TSClock : NSObject
 
 @property (nonatomic, assign) id<TSClockDelegate> delegate;
+@property (nonatomic, assign) BOOL isConfused;
+@property (nonatomic, assign) BOOL isAlarmed;
 
 - (void)updateCurrentBPM:(float)bpm syncImmediately: (BOOL)syncImmediately;
 - (void)increaseCurrentBPM;
