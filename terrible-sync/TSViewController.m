@@ -22,8 +22,8 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 @property (nonatomic, strong) UIButton *btnTempoUp;
 @property (nonatomic, strong) UIButton *btnTempoDown;
 
-@property (nonatomic, strong) UIButton *btnConfused;
-@property (nonatomic, strong) UIButton *btnAlarmed;
+@property (nonatomic, strong) TSDancingButton *btnConfused;
+@property (nonatomic, strong) TSDancingButton *btnAlarmed;
 
 - (void)onTapBeat;
 - (void)onTapTempoUp;
@@ -75,18 +75,20 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [self.view addSubview:_btnTempoDown];
     
     // confused button
-    self.btnConfused = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnConfused.frame = CGRectMake(0, 0, 66.0f, 66.5f);
-    [_btnConfused setImage:[UIImage imageNamed:@"btn_question"] forState:UIControlStateNormal];
-    [_btnConfused addTarget:self action:@selector(onTapConfused) forControlEvents:UIControlEventTouchUpInside];
+    self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.5f)];
+    [_btnConfused.internalButton setTitle:@"?" forState:UIControlStateNormal];
     [self.view addSubview:_btnConfused];
     
+    UITapGestureRecognizer *tapConfused = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapConfused)];
+    [_btnConfused addGestureRecognizer:tapConfused];
+    
     // alarmed button
-    self.btnAlarmed = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnAlarmed.frame = CGRectMake(0, 0, 66.0f, 66.5f);
-    [_btnAlarmed setImage:[UIImage imageNamed:@"btn_bang"] forState:UIControlStateNormal];
-    [_btnAlarmed addTarget:self action:@selector(onTapAlarmed) forControlEvents:UIControlEventTouchUpInside];
+    self.btnAlarmed = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.5f)];
+    [_btnAlarmed.internalButton setTitle:@"!" forState:UIControlStateNormal];
     [self.view addSubview:_btnAlarmed];
+    
+    UITapGestureRecognizer *tapAlarmed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAlarmed)];
+    [_btnAlarmed addGestureRecognizer:tapAlarmed];
     
     // fire up the audio
     [TSPulseGen sharedInstance];
@@ -122,6 +124,13 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     
     // animate
     [_btnTap bounce];
+    
+    if (clock.isConfused) {
+        [_btnConfused bounce];
+    }
+    if (clock.isAlarmed) {
+        [_btnAlarmed bounce];
+    }
 }
 
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm
