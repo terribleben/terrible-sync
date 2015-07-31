@@ -19,6 +19,7 @@
 }
 
 @property (nonatomic, strong) UIButton *btnTap;
+@property (nonatomic, strong) UILabel *lblBpm;
 @property (nonatomic, strong) UIView *vBeat;
 
 @property (nonatomic, strong) NSTimer *tmrBeat;
@@ -64,16 +65,29 @@
     [_btnTap setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.view addSubview:_btnTap];
     
-    [self startBeatWithDuration:(60.0f / 120.0f)];
+    // bpm label
+    self.lblBpm = [[UILabel alloc] init];
+    _lblBpm.font = [UIFont boldSystemFontOfSize:10.0f];
+    _lblBpm.textColor = [UIColor lightGrayColor];
+    _lblBpm.textAlignment = NSTextAlignmentCenter;
+    _lblBpm.text = @"BPM";
+    [self.view addSubview:_lblBpm];
     
     // fire up the audio
     [TSPulseGen sharedInstance];
+    
+    // launch beat timer
+    [self startBeatWithDuration:(60.0f / 120.0f)];
 }
 
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
     _btnTap.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.bounds.size.height * 0.4f);
+    
+    _lblBpm.frame = CGRectMake(0, 0, _btnTap.frame.size.width, 12.0f);
+    _lblBpm.center = CGPointMake(_btnTap.center.x, _btnTap.center.y + 20.0f);
+    
     _vBeat.frame = _btnTap.frame;
     _vBeat.layer.cornerRadius = _btnTap.layer.cornerRadius;
 }
@@ -116,10 +130,15 @@
     
     // animate
     _vBeat.transform = CGAffineTransformIdentity;
+    _btnTap.transform = CGAffineTransformIdentity;
+    
     _vBeat.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
-    [UIView animateWithDuration:0.1f animations:^{
+    _btnTap.transform = CGAffineTransformMakeScale(0.96f, 0.96f);
+    
+    [UIView animateWithDuration:0.25f delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         _vBeat.transform = CGAffineTransformIdentity;
-    }];
+        _btnTap.transform = CGAffineTransformIdentity;
+    } completion:nil];
 }
 
 @end
