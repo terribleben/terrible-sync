@@ -26,13 +26,21 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 @property (nonatomic, strong) UIView *vHitArea;
 @property (nonatomic, strong) UIView *vBeat;
 
+@property (nonatomic, strong) UIButton *btnTempoUp;
+@property (nonatomic, strong) UIButton *btnTempoDown;
+
 @property (nonatomic, strong) NSTimer *tmrBeat;
 @property (atomic, strong) NSNumber *currentBeatDuration;
 
-- (void)tap;
+- (void)onTapBeat;
+- (void)onTapTempoUp;
+- (void)onTapTempoDown;
+
 - (void)stopBeat;
 - (void)scheduleNextBeat;
 - (void)beat;
+
+- (void)updateCurrentBPM:(float)bpm syncImmediately: (BOOL)syncImmediately;
 
 @end
 
@@ -53,7 +61,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
-    // beats views
+    // beat animation view
     self.vBeat = [[UIView alloc] init];
     _vBeat.backgroundColor = [UIColor whiteColor];
     _vBeat.clipsToBounds = YES;
@@ -84,8 +92,23 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _vHitArea.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_vHitArea];
     
-    UITapGestureRecognizer *grTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
+    UITapGestureRecognizer *grTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBeat)];
     [_vHitArea addGestureRecognizer:grTap];
+    
+    // up button
+    self.btnTempoUp = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_btnTempoUp setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
+    _btnTempoUp.frame = CGRectMake(0, 0, 42.0f, 24.0f);
+    [_btnTempoUp addTarget:self action:@selector(onTapTempoUp) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_btnTempoUp];
+    
+    // down button
+    self.btnTempoDown = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_btnTempoDown setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
+    _btnTempoDown.frame = _btnTempoUp.frame;
+    [_btnTempoDown addTarget:self action:@selector(onTapTempoDown) forControlEvents:UIControlEventTouchUpInside];
+    _btnTempoDown.transform = CGAffineTransformMakeScale(1.0f, -1.0f);
+    [self.view addSubview:_btnTempoDown];
     
     // fire up the audio
     [TSPulseGen sharedInstance];
@@ -105,6 +128,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [super viewWillLayoutSubviews];
     _btnTap.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.bounds.size.height * 0.4f);
     
+    _btnTempoUp.center = CGPointMake(_btnTap.center.x, CGRectGetMinY(_btnTap.frame) - 48.0f);
+    _btnTempoDown.center = CGPointMake(_btnTap.center.x, CGRectGetMaxY(_btnTap.frame) + 48.0f);
+    
     _lblBpm.frame = CGRectMake(0, 0, _btnTap.frame.size.width, 12.0f);
     _lblBpm.center = CGPointMake(_btnTap.center.x, _btnTap.center.y + 20.0f);
     
@@ -117,7 +143,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
 #pragma mark internal
 
-- (void)tap
+- (void)onTapBeat
 {
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sinceLastTap = now - dtmLastTap;
@@ -132,15 +158,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     else
         bpmAverage = bpmLast;
     
-    if (bpmAverage >= TS_MIN_BPM && bpmAverage <= TS_MAX_BPM) {
-        self.currentBeatDuration = @(60.0f / bpmAverage);
-        
-        [[NSUserDefaults standardUserDefaults] setObject:self.currentBeatDuration forKey:kTSLastTempoUserDefaultsKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        // schedule next beat immediately (to sync with tap)
-        [self scheduleNextBeat];
-    }
+    [self updateCurrentBPM:bpmAverage syncImmediately:YES];
     
     dtmLastLastTap = dtmLastTap;
     dtmLastTap = now;
@@ -182,6 +200,33 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
         _vBeat.transform = CGAffineTransformIdentity;
         _btnTap.transform = CGAffineTransformIdentity;
     } completion:nil];
+}
+
+- (void)onTapTempoUp
+{
+    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
+    [self updateCurrentBPM:(bpmCurrent + 1.0) syncImmediately:NO];
+}
+
+- (void)onTapTempoDown
+{
+    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
+    [self updateCurrentBPM:(bpmCurrent - 1.0) syncImmediately:NO];
+}
+
+- (void)updateCurrentBPM:(float)bpm syncImmediately:(BOOL)syncImmediately
+{
+    if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
+        self.currentBeatDuration = @(60.0f / bpm);
+        
+        [[NSUserDefaults standardUserDefaults] setObject:self.currentBeatDuration forKey:kTSLastTempoUserDefaultsKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        if (syncImmediately) {
+            // schedule next beat immediately (to sync with tap)
+            [self scheduleNextBeat];
+        }
+    }
 }
 
 @end
