@@ -16,6 +16,7 @@
 @interface TSViewController ()
 {
     NSTimeInterval dtmLastTap;
+    NSTimeInterval dtmLastLastTap;
 }
 
 @property (nonatomic, strong) UIButton *btnTap;
@@ -99,11 +100,22 @@
 {
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval sinceLastTap = now - dtmLastTap;
-    CGFloat bpm = 60.0f / sinceLastTap;
-    if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
+    NSTimeInterval betweenPreviousTaps = dtmLastTap - dtmLastLastTap;
+    
+    CGFloat bpmLast = 60.0f / sinceLastTap;
+    CGFloat bpmPrevious = 60.0f / betweenPreviousTaps;
+    
+    CGFloat bpmAverage = 0;
+    if (bpmPrevious >= TS_MIN_BPM && bpmLast >= TS_MIN_BPM)
+        bpmAverage = (bpmPrevious + bpmLast) * 0.5f;
+    else
+        bpmAverage = bpmLast;
+    
+    if (bpmAverage >= TS_MIN_BPM && bpmAverage <= TS_MAX_BPM) {
         [self startBeatWithDuration:sinceLastTap];
     }
     
+    dtmLastLastTap = dtmLastTap;
     dtmLastTap = now;
 }
 
