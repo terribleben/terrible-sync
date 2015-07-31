@@ -18,6 +18,7 @@
 		B5C387AD1B6ADF3A0009A7CC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */; };
 		B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */ = {isa = PBXBuildFile; fileRef = B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */; };
 		B5C387BA1B6BF9760009A7CC /* TSClock.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387B91B6BF9760009A7CC /* TSClock.m */; };
+		B5DEDA6F1B6C340E00079B61 /* TSDancingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DEDA6E1B6C340E00079B61 /* TSDancingButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,8 @@
 		B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSPulseGen.mm; sourceTree = "<group>"; };
 		B5C387B81B6BF9760009A7CC /* TSClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSClock.h; sourceTree = "<group>"; };
 		B5C387B91B6BF9760009A7CC /* TSClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSClock.m; sourceTree = "<group>"; };
+		B5DEDA6D1B6C340E00079B61 /* TSDancingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDancingButton.h; sourceTree = "<group>"; };
+		B5DEDA6E1B6C340E00079B61 /* TSDancingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDancingButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +103,7 @@
 				B5C3878D1B6AD2640009A7CC /* TSViewController.h */,
 				B5C3878E1B6AD2640009A7CC /* TSViewController.m */,
 				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
+				B5DEDA6C1B6C33DA00079B61 /* common */,
 				B5C3879E1B6ADD630009A7CC /* audio */,
 				B5C387B41B6BF7B00009A7CC /* model */,
 				B5C387911B6AD2C00009A7CC /* supporting */,
@@ -164,6 +168,15 @@
 				B5C387B91B6BF9760009A7CC /* TSClock.m */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		B5DEDA6C1B6C33DA00079B61 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				B5DEDA6D1B6C340E00079B61 /* TSDancingButton.h */,
+				B5DEDA6E1B6C340E00079B61 /* TSDancingButton.m */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +283,7 @@
 				B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */,
 				B5C387981B6AD2C00009A7CC /* main.m in Sources */,
 				B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */,
+				B5DEDA6F1B6C340E00079B61 /* TSDancingButton.m in Sources */,
 				B5C387A51B6ADDF00009A7CC /* TSAudio.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,7 @@
 #import "TSViewController.h"
 #import "TSPulseGen.h"
 #import "TSClock.h"
+#import "TSDancingButton.h"
 
 NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
@@ -16,10 +17,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
 @property (nonatomic, strong) TSClock *clock;
 
-@property (nonatomic, strong) UIButton *btnTap;
-@property (nonatomic, strong) UILabel *lblBpm;
-@property (nonatomic, strong) UIView *vHitArea;
-@property (nonatomic, strong) UIView *vBeat;
+@property (nonatomic, strong) TSDancingButton *btnTap;
 
 @property (nonatomic, strong) UIButton *btnTempoUp;
 @property (nonatomic, strong) UIButton *btnTempoDown;
@@ -53,39 +51,13 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
-    // beat animation view
-    self.vBeat = [[UIView alloc] init];
-    _vBeat.backgroundColor = [UIColor whiteColor];
-    _vBeat.clipsToBounds = YES;
-    [self.view addSubview:_vBeat];
-    
     // the big enormous button
-    self.btnTap = [UIButton buttonWithType:UIButtonTypeCustom];
-    _btnTap.clipsToBounds = YES;
-    _btnTap.backgroundColor = [UIColor blackColor];
-    _btnTap.frame = CGRectMake(0, 0, 192.0f, 192.0f);
-    _btnTap.layer.borderWidth = 6.0f / [UIScreen mainScreen].scale;
-    _btnTap.layer.borderColor = [UIColor redColor].CGColor;
-    _btnTap.layer.cornerRadius = 192.0f * 0.5f;
-    _btnTap.titleLabel.font = [UIFont boldSystemFontOfSize:24.0f];
-    [_btnTap setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.btnTap = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 192.0f, 192.0f)];
+    _btnTap.subtitle = @"BPM";
     [self.view addSubview:_btnTap];
     
-    // bpm label
-    self.lblBpm = [[UILabel alloc] init];
-    _lblBpm.font = [UIFont boldSystemFontOfSize:10.0f];
-    _lblBpm.textColor = [UIColor lightGrayColor];
-    _lblBpm.textAlignment = NSTextAlignmentCenter;
-    _lblBpm.text = @"BPM";
-    [self.view addSubview:_lblBpm];
-    
-    // hit area view-- because the animated button has trouble detecting hits accurately
-    self.vHitArea = [[UIView alloc] init];
-    _vHitArea.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_vHitArea];
-    
-    UITapGestureRecognizer *grTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBeat)];
-    [_vHitArea addGestureRecognizer:grTap];
+    UITapGestureRecognizer *tapButton = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBeat)];
+    [_btnTap addGestureRecognizer:tapButton];
     
     // up button
     self.btnTempoUp = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -136,14 +108,6 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _btnTempoUp.center = CGPointMake(_btnTap.center.x, CGRectGetMinY(_btnTap.frame) - 48.0f);
     _btnTempoDown.center = CGPointMake(_btnTap.center.x, CGRectGetMaxY(_btnTap.frame) + 48.0f);
     
-    _lblBpm.frame = CGRectMake(0, 0, _btnTap.frame.size.width, 12.0f);
-    _lblBpm.center = CGPointMake(_btnTap.center.x, _btnTap.center.y + 20.0f);
-    
-    _vBeat.frame = _btnTap.frame;
-    _vBeat.layer.cornerRadius = _btnTap.layer.cornerRadius;
-    
-    _vHitArea.frame = _btnTap.frame;
-    
     _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.66f, self.view.bounds.size.height - 64.0f);
     _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.33f, _btnConfused.center.y);
 }
@@ -157,16 +121,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [[TSPulseGen sharedInstance] pulse];
     
     // animate
-    _vBeat.transform = CGAffineTransformIdentity;
-    _btnTap.transform = CGAffineTransformIdentity;
-    
-    _vBeat.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
-    _btnTap.transform = CGAffineTransformMakeScale(0.96f, 0.96f);
-    
-    [UIView animateWithDuration:0.25f delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        _vBeat.transform = CGAffineTransformIdentity;
-        _btnTap.transform = CGAffineTransformIdentity;
-    } completion:nil];
+    [_btnTap bounce];
 }
 
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm
@@ -215,7 +170,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     if (_clock.isAlarmed) {
         [status appendString:@"!"];
     }
-    [_btnTap setTitle:status forState:UIControlStateNormal];
+    [_btnTap.internalButton setTitle:status forState:UIControlStateNormal];
 }
 
 @end
