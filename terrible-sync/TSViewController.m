@@ -10,8 +10,8 @@
 #import "TSPulseGen.h"
 
 #define TS_NUM_BEATS_VIEWS 3
-#define TS_MIN_BPM 60.0f
-#define TS_MAX_BPM 480.0f
+#define TS_MIN_BPM 40.0f
+#define TS_MAX_BPM 999.0f
 
 NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
@@ -116,11 +116,10 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     // launch beat timer
     NSNumber *lastTempo = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastTempoUserDefaultsKey];
     if (lastTempo) {
-        self.currentBeatDuration = lastTempo;
+        [self updateCurrentBPM:lastTempo.floatValue syncImmediately:YES];
     } else {
-        self.currentBeatDuration = @(60.0f / 120.0f);
+        [self updateCurrentBPM:120.0f syncImmediately:YES];
     }
-    [self scheduleNextBeat];
 }
 
 - (void)viewWillLayoutSubviews
@@ -178,7 +177,6 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     
     // don't use a repeating timer because the duration could change between timer fires.
     _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:self.currentBeatDuration.floatValue target:self selector:@selector(beat) userInfo:nil repeats:NO];
-    [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", 60.0f * (1.0f / self.currentBeatDuration.floatValue)] forState:UIControlStateNormal];
 }
 
 - (void)beat
@@ -217,9 +215,12 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)updateCurrentBPM:(float)bpm syncImmediately:(BOOL)syncImmediately
 {
     if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
-        self.currentBeatDuration = @(60.0f / bpm);
+        // round to nearest half-bpm (better for programming the tempo into other objects)
+        float approxBpm = roundf(bpm * 2.0f) * 0.5f;
         
-        [[NSUserDefaults standardUserDefaults] setObject:self.currentBeatDuration forKey:kTSLastTempoUserDefaultsKey];
+        self.currentBeatDuration = @(60.0f / approxBpm);
+        [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", approxBpm] forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] setObject:@(approxBpm) forKey:kTSLastTempoUserDefaultsKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         if (syncImmediately) {
