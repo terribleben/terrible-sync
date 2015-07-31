@@ -1,0 +1,118 @@
+//
+//  TSClock.m
+//  terrible-sync
+//
+//  Created by Ben Roth on 7/31/15.
+//
+//
+
+#import "TSClock.h"
+
+@interface TSClock ()
+{
+    NSTimeInterval dtmLastTap;
+    NSTimeInterval dtmLastLastTap;
+}
+
+@property (nonatomic, strong) NSTimer *tmrBeat;
+@property (atomic, strong) NSNumber *currentBeatDuration;
+
+- (void)scheduleNextBeat;
+- (void)beat;
+
+@end
+
+@implementation TSClock
+
+- (id)init
+{
+    if (self = [super init]) {
+        dtmLastTap = 0;
+        dtmLastLastTap = 0;
+        self.currentBeatDuration = @(0);
+    }
+    return self;
+}
+
+- (void)stop
+{
+    if (_tmrBeat) {
+        [_tmrBeat invalidate];
+        _tmrBeat = nil;
+    }
+}
+
+- (void)onTap
+{
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval sinceLastTap = now - dtmLastTap;
+    NSTimeInterval betweenPreviousTaps = dtmLastTap - dtmLastLastTap;
+    
+    float bpmLast = (sinceLastTap > 0) ? (60.0f / sinceLastTap) : 0;
+    float bpmPrevious = (betweenPreviousTaps > 0) ? (60.0f / betweenPreviousTaps) : 0;
+    
+    float bpmAverage = 0;
+    if (bpmPrevious >= TS_MIN_BPM && bpmLast >= TS_MIN_BPM)
+        bpmAverage = (bpmPrevious + bpmLast) * 0.5f;
+    else
+        bpmAverage = bpmLast;
+    
+    [self updateCurrentBPM:bpmAverage syncImmediately:YES];
+    
+    dtmLastLastTap = dtmLastTap;
+    dtmLastTap = now;
+}
+
+- (void)updateCurrentBPM:(float)bpm syncImmediately:(BOOL)syncImmediately
+{
+    if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
+        // round to nearest half-bpm (better for programming the tempo into other objects)
+        float approxBpm = roundf(bpm * 2.0f) * 0.5f;
+        
+        self.currentBeatDuration = @(60.0f / approxBpm);
+        
+        if (syncImmediately) {
+            // schedule next beat immediately (to sync with tap)
+            [self scheduleNextBeat];
+        }
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(clock:didUpdateTempo:)]) {
+            [_delegate clock:self didUpdateTempo:approxBpm];
+        }
+    }
+}
+
+- (void)increaseCurrentBPM
+{
+    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
+    [self updateCurrentBPM:(bpmCurrent + 1.0) syncImmediately:NO];
+}
+
+- (void)decreaseCurrentBPM
+{
+    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
+    [self updateCurrentBPM:(bpmCurrent - 1.0) syncImmediately:NO];
+}
+
+
+#pragma mark internal
+
+- (void)beat
+{
+    if (_delegate) {
+        [_delegate clockDidBeat:self];
+    }
+    
+    // continue beating
+    [self scheduleNextBeat];
+}
+
+- (void)scheduleNextBeat
+{
+    [self stop];
+    
+    // don't use a repeating timer because the duration could change between timer fires.
+    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:self.currentBeatDuration.floatValue target:self selector:@selector(beat) userInfo:nil repeats:NO];
+}
+
+@end

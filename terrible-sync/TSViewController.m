@@ -8,18 +8,13 @@
 
 #import "TSViewController.h"
 #import "TSPulseGen.h"
-
-#define TS_NUM_BEATS_VIEWS 3
-#define TS_MIN_BPM 40.0f
-#define TS_MAX_BPM 999.0f
+#import "TSClock.h"
 
 NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
-@interface TSViewController ()
-{
-    NSTimeInterval dtmLastTap;
-    NSTimeInterval dtmLastLastTap;
-}
+@interface TSViewController () <TSClockDelegate>
+
+@property (nonatomic, strong) TSClock *clock;
 
 @property (nonatomic, strong) UIButton *btnTap;
 @property (nonatomic, strong) UILabel *lblBpm;
@@ -29,18 +24,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 @property (nonatomic, strong) UIButton *btnTempoUp;
 @property (nonatomic, strong) UIButton *btnTempoDown;
 
-@property (nonatomic, strong) NSTimer *tmrBeat;
-@property (atomic, strong) NSNumber *currentBeatDuration;
-
 - (void)onTapBeat;
 - (void)onTapTempoUp;
 - (void)onTapTempoDown;
-
-- (void)stopBeat;
-- (void)scheduleNextBeat;
-- (void)beat;
-
-- (void)updateCurrentBPM:(float)bpm syncImmediately: (BOOL)syncImmediately;
 
 @end
 
@@ -49,9 +35,8 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (id)init
 {
     if (self = [super init]) {
-        dtmLastTap = 0;
-        dtmLastLastTap = 0;
-        self.currentBeatDuration = @(0);
+        self.clock = [[TSClock alloc] init];
+        _clock.delegate = self;
     }
     return self;
 }
@@ -116,9 +101,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     // launch beat timer
     NSNumber *lastTempo = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastTempoUserDefaultsKey];
     if (lastTempo) {
-        [self updateCurrentBPM:lastTempo.floatValue syncImmediately:YES];
+        [_clock updateCurrentBPM:lastTempo.floatValue syncImmediately:YES];
     } else {
-        [self updateCurrentBPM:120.0f syncImmediately:YES];
+        [_clock updateCurrentBPM:120.0f syncImmediately:YES];
     }
 }
 
@@ -140,50 +125,10 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 }
 
 
-#pragma mark internal
+#pragma mark delegate
 
-- (void)onTapBeat
+- (void)clockDidBeat:(TSClock *)clock
 {
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval sinceLastTap = now - dtmLastTap;
-    NSTimeInterval betweenPreviousTaps = dtmLastTap - dtmLastLastTap;
-    
-    CGFloat bpmLast = (sinceLastTap > 0) ? (60.0f / sinceLastTap) : 0;
-    CGFloat bpmPrevious = (betweenPreviousTaps > 0) ? (60.0f / betweenPreviousTaps) : 0;
-    
-    CGFloat bpmAverage = 0;
-    if (bpmPrevious >= TS_MIN_BPM && bpmLast >= TS_MIN_BPM)
-        bpmAverage = (bpmPrevious + bpmLast) * 0.5f;
-    else
-        bpmAverage = bpmLast;
-    
-    [self updateCurrentBPM:bpmAverage syncImmediately:YES];
-    
-    dtmLastLastTap = dtmLastTap;
-    dtmLastTap = now;
-}
-
-- (void)stopBeat
-{
-    if (_tmrBeat) {
-        [_tmrBeat invalidate];
-        _tmrBeat = nil;
-    }
-}
-
-- (void)scheduleNextBeat
-{
-    [self stopBeat];
-    
-    // don't use a repeating timer because the duration could change between timer fires.
-    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:self.currentBeatDuration.floatValue target:self selector:@selector(beat) userInfo:nil repeats:NO];
-}
-
-- (void)beat
-{
-    // continue beating
-    [self scheduleNextBeat];
-    
     // generate a pulse
     [[TSPulseGen sharedInstance] pulse];
     
@@ -200,34 +145,29 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     } completion:nil];
 }
 
+- (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm
+{
+    [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", bpm] forState:UIControlStateNormal];
+    [[NSUserDefaults standardUserDefaults] setObject:@(bpm) forKey:kTSLastTempoUserDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
+#pragma mark internal
+
+- (void)onTapBeat
+{
+    [_clock onTap];
+}
+
 - (void)onTapTempoUp
 {
-    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
-    [self updateCurrentBPM:(bpmCurrent + 1.0) syncImmediately:NO];
+    [_clock increaseCurrentBPM];
 }
 
 - (void)onTapTempoDown
 {
-    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
-    [self updateCurrentBPM:(bpmCurrent - 1.0) syncImmediately:NO];
-}
-
-- (void)updateCurrentBPM:(float)bpm syncImmediately:(BOOL)syncImmediately
-{
-    if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
-        // round to nearest half-bpm (better for programming the tempo into other objects)
-        float approxBpm = roundf(bpm * 2.0f) * 0.5f;
-        
-        self.currentBeatDuration = @(60.0f / approxBpm);
-        [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", approxBpm] forState:UIControlStateNormal];
-        [[NSUserDefaults standardUserDefaults] setObject:@(approxBpm) forKey:kTSLastTempoUserDefaultsKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        if (syncImmediately) {
-            // schedule next beat immediately (to sync with tap)
-            [self scheduleNextBeat];
-        }
-    }
+    [_clock decreaseCurrentBPM];
 }
 
 @end

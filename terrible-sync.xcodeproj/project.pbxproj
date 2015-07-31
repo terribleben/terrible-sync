@@ -17,6 +17,7 @@
 		B5C387A71B6ADF060009A7CC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C387A61B6ADF060009A7CC /* AVFoundation.framework */; };
 		B5C387AD1B6ADF3A0009A7CC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */; };
 		B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */ = {isa = PBXBuildFile; fileRef = B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */; };
+		B5C387BA1B6BF9760009A7CC /* TSClock.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387B91B6BF9760009A7CC /* TSClock.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		B5C387AC1B6ADF3A0009A7CC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B5C387AE1B6ADF9B0009A7CC /* TSPulseGen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPulseGen.h; sourceTree = "<group>"; };
 		B5C387B11B6AE1080009A7CC /* TSPulseGen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TSPulseGen.mm; sourceTree = "<group>"; };
+		B5C387B81B6BF9760009A7CC /* TSClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSClock.h; sourceTree = "<group>"; };
+		B5C387B91B6BF9760009A7CC /* TSClock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSClock.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +101,7 @@
 				B5C3878E1B6AD2640009A7CC /* TSViewController.m */,
 				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
 				B5C3879E1B6ADD630009A7CC /* audio */,
+				B5C387B41B6BF7B00009A7CC /* model */,
 				B5C387911B6AD2C00009A7CC /* supporting */,
 				B5C387B31B6AE5BC0009A7CC /* frameworks */,
 			);
@@ -151,6 +155,15 @@
 			);
 			name = frameworks;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		B5C387B41B6BF7B00009A7CC /* model */ = {
+			isa = PBXGroup;
+			children = (
+				B5C387B81B6BF9760009A7CC /* TSClock.h */,
+				B5C387B91B6BF9760009A7CC /* TSClock.m */,
+			);
+			path = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */,
+				B5C387BA1B6BF9760009A7CC /* TSClock.m in Sources */,
 				B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */,
 				B5C387981B6AD2C00009A7CC /* main.m in Sources */,
 				B5C387901B6AD2640009A7CC /* TSViewController.m in Sources */,
