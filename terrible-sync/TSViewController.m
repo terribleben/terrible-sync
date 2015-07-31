@@ -13,6 +13,8 @@
 #define TS_MIN_BPM 60.0f
 #define TS_MAX_BPM 480.0f
 
+NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
+
 @interface TSViewController ()
 {
     NSTimeInterval dtmLastTap;
@@ -87,7 +89,12 @@
     [TSPulseGen sharedInstance];
     
     // launch beat timer
-    [self startBeatWithDuration:(60.0f / 120.0f)];
+    NSNumber *lastTempo = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastTempoUserDefaultsKey];
+    if (lastTempo) {
+        [self startBeatWithDuration:lastTempo.floatValue];
+    } else {
+        [self startBeatWithDuration:(60.0f / 120.0f)];
+    }
 }
 
 - (void)viewWillLayoutSubviews
@@ -144,6 +151,9 @@
     
     _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(beat) userInfo:nil repeats:YES];
     [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", 60.0f * (1.0f / duration)] forState:UIControlStateNormal];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@(duration) forKey:kTSLastTempoUserDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)beat
