@@ -33,6 +33,8 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)onTapConfused;
 - (void)onTapAlarmed;
 
+- (void)updateUI;
+
 @end
 
 @implementation TSViewController
@@ -169,7 +171,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm
 {
-    [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", bpm] forState:UIControlStateNormal];
+    [self updateUI];
     [[NSUserDefaults standardUserDefaults] setObject:@(bpm) forKey:kTSLastTempoUserDefaultsKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -195,11 +197,25 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)onTapAlarmed
 {
     _clock.isAlarmed = !_clock.isAlarmed;
+    [self updateUI];
 }
 
 - (void)onTapConfused
 {
     _clock.isConfused = !_clock.isConfused;
+    [self updateUI];
+}
+
+- (void)updateUI
+{
+    NSMutableString *status = [NSMutableString stringWithFormat:@"%.1f", _clock.currentBpm];
+    if (_clock.isConfused) {
+        [status appendString:@"?"];
+    }
+    if (_clock.isAlarmed) {
+        [status appendString:@"!"];
+    }
+    [_btnTap setTitle:status forState:UIControlStateNormal];
 }
 
 @end

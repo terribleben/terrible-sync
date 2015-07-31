@@ -86,14 +86,17 @@
 
 - (void)increaseCurrentBPM
 {
-    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
-    [self updateCurrentBPM:(bpmCurrent + 1.0) syncImmediately:NO];
+    [self updateCurrentBPM:(self.currentBpm + 1.0) syncImmediately:NO];
 }
 
 - (void)decreaseCurrentBPM
 {
-    float bpmCurrent = 60.0f / self.currentBeatDuration.floatValue;
-    [self updateCurrentBPM:(bpmCurrent - 1.0) syncImmediately:NO];
+    [self updateCurrentBPM:(self.currentBpm - 1.0) syncImmediately:NO];
+}
+
+- (float)currentBpm
+{
+    return 60.0f / self.currentBeatDuration.floatValue;
 }
 
 
