@@ -27,10 +27,11 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 @property (nonatomic, strong) UIView *vBeat;
 
 @property (nonatomic, strong) NSTimer *tmrBeat;
+@property (atomic, strong) NSNumber *currentBeatDuration;
 
 - (void)tap;
 - (void)stopBeat;
-- (void)startBeatWithDuration: (NSTimeInterval)duration;
+- (void)scheduleNextBeat;
 - (void)beat;
 
 @end
@@ -42,6 +43,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     if (self = [super init]) {
         dtmLastTap = 0;
         dtmLastLastTap = 0;
+        self.currentBeatDuration = @(0);
     }
     return self;
 }
@@ -91,10 +93,11 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     // launch beat timer
     NSNumber *lastTempo = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastTempoUserDefaultsKey];
     if (lastTempo) {
-        [self startBeatWithDuration:lastTempo.floatValue];
+        self.currentBeatDuration = lastTempo;
     } else {
-        [self startBeatWithDuration:(60.0f / 120.0f)];
+        self.currentBeatDuration = @(60.0f / 120.0f);
     }
+    [self scheduleNextBeat];
 }
 
 - (void)viewWillLayoutSubviews
@@ -130,7 +133,13 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
         bpmAverage = bpmLast;
     
     if (bpmAverage >= TS_MIN_BPM && bpmAverage <= TS_MAX_BPM) {
-        [self startBeatWithDuration:60.0f / bpmAverage];
+        self.currentBeatDuration = @(60.0f / bpmAverage);
+        
+        [[NSUserDefaults standardUserDefaults] setObject:self.currentBeatDuration forKey:kTSLastTempoUserDefaultsKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        // schedule next beat immediately (to sync with tap)
+        [self scheduleNextBeat];
     }
     
     dtmLastLastTap = dtmLastTap;
@@ -145,19 +154,20 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     }
 }
 
-- (void)startBeatWithDuration:(NSTimeInterval)duration
+- (void)scheduleNextBeat
 {
     [self stopBeat];
     
-    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(beat) userInfo:nil repeats:YES];
-    [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", 60.0f * (1.0f / duration)] forState:UIControlStateNormal];
-    
-    [[NSUserDefaults standardUserDefaults] setObject:@(duration) forKey:kTSLastTempoUserDefaultsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    // don't use a repeating timer because the duration could change between timer fires.
+    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:self.currentBeatDuration.floatValue target:self selector:@selector(beat) userInfo:nil repeats:NO];
+    [_btnTap setTitle:[NSString stringWithFormat:@"%.1f", 60.0f * (1.0f / self.currentBeatDuration.floatValue)] forState:UIControlStateNormal];
 }
 
 - (void)beat
 {
+    // continue beating
+    [self scheduleNextBeat];
+    
     // generate a pulse
     [[TSPulseGen sharedInstance] pulse];
     
