@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) UIButton *btnTap;
 @property (nonatomic, strong) UILabel *lblBpm;
+@property (nonatomic, strong) UIView *vHitArea;
 @property (nonatomic, strong) UIView *vBeat;
 
 @property (nonatomic, strong) NSTimer *tmrBeat;
@@ -38,6 +39,7 @@
 {
     if (self = [super init]) {
         dtmLastTap = 0;
+        dtmLastLastTap = 0;
     }
     return self;
 }
@@ -55,7 +57,6 @@
     
     // the button
     self.btnTap = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_btnTap addTarget:self action:@selector(tap) forControlEvents:UIControlEventTouchUpInside];
     _btnTap.clipsToBounds = YES;
     _btnTap.backgroundColor = [UIColor blackColor];
     _btnTap.frame = CGRectMake(0, 0, 192.0f, 192.0f);
@@ -74,6 +75,14 @@
     _lblBpm.text = @"BPM";
     [self.view addSubview:_lblBpm];
     
+    // hit area view-- because the animated button has trouble detecting hits accurately
+    self.vHitArea = [[UIView alloc] init];
+    _vHitArea.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_vHitArea];
+    
+    UITapGestureRecognizer *grTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
+    [_vHitArea addGestureRecognizer:grTap];
+    
     // fire up the audio
     [TSPulseGen sharedInstance];
     
@@ -91,6 +100,8 @@
     
     _vBeat.frame = _btnTap.frame;
     _vBeat.layer.cornerRadius = _btnTap.layer.cornerRadius;
+    
+    _vHitArea.frame = _btnTap.frame;
 }
 
 
@@ -102,8 +113,8 @@
     NSTimeInterval sinceLastTap = now - dtmLastTap;
     NSTimeInterval betweenPreviousTaps = dtmLastTap - dtmLastLastTap;
     
-    CGFloat bpmLast = 60.0f / sinceLastTap;
-    CGFloat bpmPrevious = 60.0f / betweenPreviousTaps;
+    CGFloat bpmLast = (sinceLastTap > 0) ? (60.0f / sinceLastTap) : 0;
+    CGFloat bpmPrevious = (betweenPreviousTaps > 0) ? (60.0f / betweenPreviousTaps) : 0;
     
     CGFloat bpmAverage = 0;
     if (bpmPrevious >= TS_MIN_BPM && bpmLast >= TS_MIN_BPM)
@@ -112,7 +123,7 @@
         bpmAverage = bpmLast;
     
     if (bpmAverage >= TS_MIN_BPM && bpmAverage <= TS_MAX_BPM) {
-        [self startBeatWithDuration:sinceLastTap];
+        [self startBeatWithDuration:60.0f / bpmAverage];
     }
     
     dtmLastLastTap = dtmLastTap;
