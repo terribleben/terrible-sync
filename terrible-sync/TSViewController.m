@@ -24,6 +24,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 @property (nonatomic, strong) UIButton *btnTempoUp;
 @property (nonatomic, strong) UIButton *btnTempoDown;
 
+@property (nonatomic, strong) UIButton *btnConfused;
+@property (nonatomic, strong) UIButton *btnAlarmed;
+
 - (void)onTapBeat;
 - (void)onTapTempoUp;
 - (void)onTapTempoDown;
@@ -52,7 +55,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _vBeat.clipsToBounds = YES;
     [self.view addSubview:_vBeat];
     
-    // the button
+    // the big enormous button
     self.btnTap = [UIButton buttonWithType:UIButtonTypeCustom];
     _btnTap.clipsToBounds = YES;
     _btnTap.backgroundColor = [UIColor blackColor];
@@ -95,6 +98,18 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _btnTempoDown.transform = CGAffineTransformMakeScale(1.0f, -1.0f);
     [self.view addSubview:_btnTempoDown];
     
+    // confused button
+    self.btnConfused = [UIButton buttonWithType:UIButtonTypeCustom];
+    _btnConfused.frame = CGRectMake(0, 0, 66.0f, 66.5f);
+    [_btnConfused setImage:[UIImage imageNamed:@"btn_question"] forState:UIControlStateNormal];
+    [self.view addSubview:_btnConfused];
+    
+    // alarmed button
+    self.btnAlarmed = [UIButton buttonWithType:UIButtonTypeCustom];
+    _btnAlarmed.frame = CGRectMake(0, 0, 66.0f, 66.5f);
+    [_btnAlarmed setImage:[UIImage imageNamed:@"btn_bang"] forState:UIControlStateNormal];
+    [self.view addSubview:_btnAlarmed];
+    
     // fire up the audio
     [TSPulseGen sharedInstance];
     
@@ -122,6 +137,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _vBeat.layer.cornerRadius = _btnTap.layer.cornerRadius;
     
     _vHitArea.frame = _btnTap.frame;
+    
+    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.66f, self.view.bounds.size.height - 64.0f);
+    _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.33f, _btnConfused.center.y);
 }
 
 
