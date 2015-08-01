@@ -24,12 +24,14 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
 @property (nonatomic, strong) TSDancingButton *btnConfused;
 @property (nonatomic, strong) TSDancingButton *btnAlarmed;
+@property (nonatomic, strong) TSDancingButton *btnMystery;
 
 - (void)onTapBeat;
 - (void)onTapTempoUp;
 - (void)onTapTempoDown;
 - (void)onTapConfused;
 - (void)onTapAlarmed;
+- (void)onTapMystery;
 
 - (void)updateUI;
 
@@ -75,7 +77,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [self.view addSubview:_btnTempoDown];
     
     // confused button
-    self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.5f)];
+    self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.0f)];
     [_btnConfused.internalButton setTitle:@"?" forState:UIControlStateNormal];
     [self.view addSubview:_btnConfused];
     
@@ -83,12 +85,20 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [_btnConfused addGestureRecognizer:tapConfused];
     
     // alarmed button
-    self.btnAlarmed = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.5f)];
+    self.btnAlarmed = [[TSDancingButton alloc] initWithFrame:_btnConfused.frame];
     [_btnAlarmed.internalButton setTitle:@"!" forState:UIControlStateNormal];
     [self.view addSubview:_btnAlarmed];
     
     UITapGestureRecognizer *tapAlarmed = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapAlarmed)];
     [_btnAlarmed addGestureRecognizer:tapAlarmed];
+    
+    // mystery button
+    self.btnMystery = [[TSDancingButton alloc] initWithFrame:_btnConfused.frame];
+    [_btnMystery.internalButton setTitle:@"🔥" forState:UIControlStateNormal];
+    [self.view addSubview:_btnMystery];
+    
+    UITapGestureRecognizer *tapMystery = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapMystery)];
+    [_btnMystery addGestureRecognizer:tapMystery];
     
     // fire up the audio
     [TSPulseGen sharedInstance];
@@ -110,8 +120,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _btnTempoUp.center = CGPointMake(_btnTap.center.x, CGRectGetMinY(_btnTap.frame) - 48.0f);
     _btnTempoDown.center = CGPointMake(_btnTap.center.x, CGRectGetMaxY(_btnTap.frame) + 48.0f);
     
-    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.66f, self.view.bounds.size.height - 64.0f);
-    _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.33f, _btnConfused.center.y);
+    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.22f, self.view.bounds.size.height - 64.0f);
+    _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.5f, _btnConfused.center.y);
+    _btnMystery.center = CGPointMake(self.view.bounds.size.width * 0.78f, _btnConfused.center.y);
 }
 
 
@@ -130,6 +141,10 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     }
     if (clock.isAlarmed) {
         [_btnAlarmed bounce];
+    }
+    if (clock.isEnigmatic) {
+        [_btnMystery bounce];
+        [self updateUI];
     }
 }
 
@@ -170,15 +185,30 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [self updateUI];
 }
 
+- (void)onTapMystery
+{
+    _clock.isEnigmatic = !_clock.isEnigmatic;
+    [self updateUI];
+}
+
 - (void)updateUI
 {
-    NSMutableString *status = [NSMutableString stringWithFormat:@"%.1f", _clock.currentBpm];
+    NSMutableString *status;
+    
+    if (_clock.isEnigmatic) {
+        // what is this help me
+        unsigned int val = 0x1f330 + (rand() % (16 * 20));
+        status = [[NSMutableString alloc] initWithBytes:&val length:sizeof(val) encoding:NSUTF32LittleEndianStringEncoding];
+    } else {
+        status = [NSMutableString stringWithFormat:@"%.1f", _clock.currentBpm];
+    }
     if (_clock.isConfused) {
         [status appendString:@"?"];
     }
     if (_clock.isAlarmed) {
         [status appendString:@"!"];
     }
+    
     [_btnTap.internalButton setTitle:status forState:UIControlStateNormal];
 }
 

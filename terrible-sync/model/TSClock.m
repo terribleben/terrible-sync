@@ -31,6 +31,7 @@
         dtmLastLastTap = 0;
         _isAlarmed = NO;
         _isConfused = NO;
+        _isEnigmatic = NO;
         self.currentBeatDuration = @(0);
     }
     return self;
@@ -115,8 +116,17 @@
 - (void)scheduleNextBeat
 {
     [self stop];
-    
     // don't use a repeating timer because the duration could change between timer fires.
+    
+    if (_isEnigmatic) {
+        float randf = (float)rand() / (float)RAND_MAX;
+        if (randf < 0.2f) {
+            randf = (float)rand() / (float)RAND_MAX;
+            float newBpm = TS_MIN_BPM + (randf * ((TS_MAX_BPM * 0.33f) - TS_MIN_BPM));
+            self.currentBeatDuration = @(60.0f / newBpm);
+        }
+    }
+    
     NSTimeInterval untilNextBeat = self.currentBeatDuration.floatValue;
     if (_isAlarmed) {
         untilNextBeat *= 0.5f;

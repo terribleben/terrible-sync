@@ -29,6 +29,7 @@
 @property (nonatomic, readonly) float currentBpm;
 @property (nonatomic, assign) BOOL isConfused;
 @property (nonatomic, assign) BOOL isAlarmed;
+@property (nonatomic, assign) BOOL isEnigmatic;
 
 - (void)updateCurrentBPM:(float)bpm syncImmediately: (BOOL)syncImmediately;
 - (void)increaseCurrentBPM;
