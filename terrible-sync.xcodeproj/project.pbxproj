@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B5606C8F1C5AA58F009D935F /* UIView+TS.m in Sources */ = {isa = PBXBuildFile; fileRef = B5606C8E1C5AA58F009D935F /* UIView+TS.m */; };
 		B5C387731B6AD1A90009A7CC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5C387721B6AD1A90009A7CC /* Images.xcassets */; };
 		B5C387821B6AD1A90009A7CC /* terrible_syncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387811B6AD1A90009A7CC /* terrible_syncTests.m */; };
 		B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C3878C1B6AD2640009A7CC /* TSAppDelegate.m */; };
@@ -32,6 +33,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B5606C8D1C5AA58F009D935F /* UIView+TS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TS.h"; sourceTree = "<group>"; };
+		B5606C8E1C5AA58F009D935F /* UIView+TS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TS.m"; sourceTree = "<group>"; };
 		B5C387621B6AD1A90009A7CC /* terrible-sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "terrible-sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5C387721B6AD1A90009A7CC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B5C3877B1B6AD1A90009A7CC /* terrible-syncTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "terrible-syncTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -175,6 +178,8 @@
 			children = (
 				B5DEDA6D1B6C340E00079B61 /* TSDancingButton.h */,
 				B5DEDA6E1B6C340E00079B61 /* TSDancingButton.m */,
+				B5606C8D1C5AA58F009D935F /* UIView+TS.h */,
+				B5606C8E1C5AA58F009D935F /* UIView+TS.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -279,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5C387B21B6AE1080009A7CC /* TSPulseGen.mm in Sources */,
+				B5606C8F1C5AA58F009D935F /* UIView+TS.m in Sources */,
 				B5C387BA1B6BF9760009A7CC /* TSClock.m in Sources */,
 				B5C3878F1B6AD2640009A7CC /* TSAppDelegate.m in Sources */,
 				B5C387981B6AD2C00009A7CC /* main.m in Sources */,
@@ -392,6 +398,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/terrible-sync/supporting/terrible-sync-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.terribleben.$(PRODUCT_NAME:rfc1034identifier)";
@@ -403,6 +410,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = "$(SRCROOT)/terrible-sync/supporting/terrible-sync-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.terribleben.$(PRODUCT_NAME:rfc1034identifier)";

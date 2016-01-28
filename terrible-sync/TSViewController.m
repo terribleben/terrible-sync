@@ -10,6 +10,7 @@
 #import "TSPulseGen.h"
 #import "TSClock.h"
 #import "TSDancingButton.h"
+#import "UIView+TS.h"
 
 NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 
@@ -66,6 +67,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [_btnTempoUp setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
     _btnTempoUp.frame = CGRectMake(0, 0, 42.0f, 24.0f);
     [_btnTempoUp addTarget:self action:@selector(onTapTempoUp) forControlEvents:UIControlEventTouchUpInside];
+    [_btnTempoUp setHitTestEdgeInsets:UIEdgeInsetsMake(-2, -2, -2, -2)];
     [self.view addSubview:_btnTempoUp];
     
     // down button
@@ -74,6 +76,7 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     _btnTempoDown.frame = _btnTempoUp.frame;
     [_btnTempoDown addTarget:self action:@selector(onTapTempoDown) forControlEvents:UIControlEventTouchUpInside];
     _btnTempoDown.transform = CGAffineTransformMakeScale(1.0f, -1.0f);
+    [_btnTempoDown setHitTestEdgeInsets:UIEdgeInsetsMake(-2, -2, -2, -2)];
     [self.view addSubview:_btnTempoDown];
     
     // confused button
