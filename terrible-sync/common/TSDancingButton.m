@@ -8,6 +8,8 @@
 
 #import "TSDancingButton.h"
 
+CGFloat const kTSDancingButtonBounceDuration = 0.25f;
+
 @interface TSDancingButton ()
 
 @property (nonatomic, strong) UIButton *internalButton;
@@ -80,9 +82,10 @@
     _vBounceAnimation.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
     _internalButton.transform = CGAffineTransformMakeScale(0.96f, 0.96f);
     
-    [UIView animateWithDuration:0.25f delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        _vBounceAnimation.transform = CGAffineTransformIdentity;
-        _internalButton.transform = CGAffineTransformIdentity;
+    __weak typeof(self) weakSelf = self;
+    [UIView animateWithDuration:kTSDancingButtonBounceDuration delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        weakSelf.vBounceAnimation.transform = CGAffineTransformIdentity;
+        weakSelf.internalButton.transform = CGAffineTransformIdentity;
     } completion:nil];
 }
 

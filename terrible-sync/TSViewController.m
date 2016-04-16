@@ -10,31 +10,29 @@
 #import "TSPulseGen.h"
 #import "TSClock.h"
 #import "TSDancingButton.h"
+#import "TSRotaryButton.h"
 #import "UIView+TS.h"
 
 NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
+NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaultsKey";
 
-@interface TSViewController () <TSClockDelegate>
+@interface TSViewController () <TSClockDelegate, TSRotaryButtonDelegate>
 
 @property (nonatomic, strong) TSClock *clock;
 
-@property (nonatomic, strong) TSDancingButton *btnTap;
-
-@property (nonatomic, strong) UIButton *btnTempoUp;
-@property (nonatomic, strong) UIButton *btnTempoDown;
+@property (nonatomic, strong) TSRotaryButton *btnTap;
 
 @property (nonatomic, strong) TSDancingButton *btnConfused;
 @property (nonatomic, strong) TSDancingButton *btnAlarmed;
 @property (nonatomic, strong) TSDancingButton *btnMystery;
 
 - (void)onTapBeat;
-- (void)onTapTempoUp;
-- (void)onTapTempoDown;
 - (void)onTapConfused;
 - (void)onTapAlarmed;
 - (void)onTapMystery;
 
 - (void)updateUI;
+- (void)appWillResign;
 
 @end
 
@@ -55,29 +53,17 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     self.view.backgroundColor = [UIColor blackColor];
     
     // the big enormous button
-    self.btnTap = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 192.0f, 192.0f)];
+    self.btnTap = [[TSRotaryButton alloc] initWithFrame:CGRectMake(0, 0, 192.0f, 192.0f)];
+    NSNumber *lastRotaryAngle = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastRotaryAngleUserDefaultsKey];
+    if (lastRotaryAngle) {
+        _btnTap.angle = [lastRotaryAngle floatValue];
+    }
     _btnTap.subtitle = @"BPM";
+    _btnTap.delegate = self;
     [self.view addSubview:_btnTap];
     
     UITapGestureRecognizer *tapButton = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapBeat)];
     [_btnTap addGestureRecognizer:tapButton];
-    
-    // up button
-    self.btnTempoUp = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_btnTempoUp setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
-    _btnTempoUp.frame = CGRectMake(0, 0, 42.0f, 24.0f);
-    [_btnTempoUp addTarget:self action:@selector(onTapTempoUp) forControlEvents:UIControlEventTouchUpInside];
-    [_btnTempoUp setHitTestEdgeInsets:UIEdgeInsetsMake(-2, -2, -2, -2)];
-    [self.view addSubview:_btnTempoUp];
-    
-    // down button
-    self.btnTempoDown = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_btnTempoDown setImage:[UIImage imageNamed:@"arrow"] forState:UIControlStateNormal];
-    _btnTempoDown.frame = _btnTempoUp.frame;
-    [_btnTempoDown addTarget:self action:@selector(onTapTempoDown) forControlEvents:UIControlEventTouchUpInside];
-    _btnTempoDown.transform = CGAffineTransformMakeScale(1.0f, -1.0f);
-    [_btnTempoDown setHitTestEdgeInsets:UIEdgeInsetsMake(-2, -2, -2, -2)];
-    [self.view addSubview:_btnTempoDown];
     
     // confused button
     self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.0f)];
@@ -113,6 +99,9 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     } else {
         [_clock updateCurrentBPM:120.0f syncImmediately:YES];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResign) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResign) name:UIApplicationWillTerminateNotification object:nil];
 }
 
 - (void)viewWillLayoutSubviews
@@ -120,12 +109,19 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
     [super viewWillLayoutSubviews];
     _btnTap.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.bounds.size.height * 0.4f);
     
-    _btnTempoUp.center = CGPointMake(_btnTap.center.x, CGRectGetMinY(_btnTap.frame) - 48.0f);
-    _btnTempoDown.center = CGPointMake(_btnTap.center.x, CGRectGetMaxY(_btnTap.frame) + 48.0f);
-    
     _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.22f, self.view.bounds.size.height - 64.0f);
     _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.5f, _btnConfused.center.y);
     _btnMystery.center = CGPointMake(self.view.bounds.size.width * 0.78f, _btnConfused.center.y);
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 
@@ -154,26 +150,27 @@ NSString * const kTSLastTempoUserDefaultsKey = @"TSLastTempoUserDefaultsKey";
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm
 {
     [self updateUI];
-    [[NSUserDefaults standardUserDefaults] setObject:@(bpm) forKey:kTSLastTempoUserDefaultsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)rotaryButton:(TSRotaryButton *)button didChangeAngle:(CGFloat)deltaAngle
+{
+    float newBPM = _clock.currentBpm + deltaAngle;
+    [_clock updateCurrentBPM:newBPM syncImmediately:NO];
 }
 
 
 #pragma mark internal
 
+- (void)appWillResign
+{
+    [[NSUserDefaults standardUserDefaults] setObject:@(_clock.currentBpm) forKey:kTSLastTempoUserDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] setObject:@(_btnTap.angle) forKey:kTSLastRotaryAngleUserDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)onTapBeat
 {
     [_clock onTap];
-}
-
-- (void)onTapTempoUp
-{
-    [_clock increaseCurrentBPM];
-}
-
-- (void)onTapTempoDown
-{
-    [_clock decreaseCurrentBPM];
 }
 
 - (void)onTapAlarmed

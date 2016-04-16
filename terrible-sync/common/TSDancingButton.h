@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+FOUNDATION_EXPORT CGFloat const kTSDancingButtonBounceDuration;
+
 @interface TSDancingButton : UIView
 
 @property (nonatomic, readonly) UIButton *internalButton;

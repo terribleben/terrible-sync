@@ -25,6 +25,8 @@
     _window.rootViewController = _vcRoot;
     [_window makeKeyAndVisible];
     
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
     return YES;
 }
 

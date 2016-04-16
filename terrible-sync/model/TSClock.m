@@ -69,10 +69,7 @@
 - (void)updateCurrentBPM:(float)bpm syncImmediately:(BOOL)syncImmediately
 {
     if (bpm >= TS_MIN_BPM && bpm <= TS_MAX_BPM) {
-        // round to nearest half-bpm (better for programming the tempo into other objects)
-        float approxBpm = roundf(bpm * 2.0f) * 0.5f;
-        
-        self.currentBeatDuration = @(60.0f / approxBpm);
+        self.currentBeatDuration = @(60.0f / bpm);
         
         if (syncImmediately) {
             // schedule next beat immediately (to sync with tap)
@@ -80,7 +77,7 @@
         }
         
         if (_delegate && [_delegate respondsToSelector:@selector(clock:didUpdateTempo:)]) {
-            [_delegate clock:self didUpdateTempo:approxBpm];
+            [_delegate clock:self didUpdateTempo:bpm];
         }
     }
 }
@@ -127,7 +124,9 @@
         }
     }
     
-    NSTimeInterval untilNextBeat = self.currentBeatDuration.floatValue;
+    // seems like these instruments expect a sync pulse on their eighth note, so pulse at 0.5 * currentBeatDuration
+    NSTimeInterval untilNextBeat = self.currentBeatDuration.floatValue * 0.5f;
+    
     if (_isAlarmed) {
         untilNextBeat *= 0.5f;
     }
