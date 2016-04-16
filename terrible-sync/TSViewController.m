@@ -132,19 +132,22 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     // generate a pulse
     [[TSPulseGen sharedInstance] pulse];
     
-    // animate
-    [_btnTap bounce];
-    
-    if (clock.isConfused) {
-        [_btnConfused bounce];
-    }
-    if (clock.isAlarmed) {
-        [_btnAlarmed bounce];
-    }
-    if (clock.isEnigmatic) {
-        [_btnMystery bounce];
-        [self updateUI];
-    }
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // animate
+        [weakSelf.btnTap bounce];
+
+        if (clock.isConfused) {
+            [weakSelf.btnConfused bounce];
+        }
+        if (clock.isAlarmed) {
+            [weakSelf.btnAlarmed bounce];
+        }
+        if (clock.isEnigmatic) {
+            [weakSelf.btnMystery bounce];
+            [weakSelf updateUI];
+        }
+    });
 }
 
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm

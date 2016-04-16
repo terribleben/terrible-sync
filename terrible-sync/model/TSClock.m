@@ -7,18 +7,30 @@
 //
 
 #import "TSClock.h"
+#import <sys/time.h>
+
+long currentTimeUSec()
+{
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    return (tp.tv_sec * 1000000 + tp.tv_usec);
+}
 
 @interface TSClock ()
 {
     NSTimeInterval dtmLastTap;
     NSTimeInterval dtmLastLastTap;
+
+    long nextBeatTimeUSec;
+    BOOL isTimerRunning;
 }
 
-@property (nonatomic, strong) NSTimer *tmrBeat;
 @property (atomic, strong) NSNumber *currentBeatDuration;
 
 - (void)scheduleNextBeat;
 - (void)beat;
+- (void)startTimerThread;
+- (void)runTimer;
 
 @end
 
@@ -33,16 +45,16 @@
         _isConfused = NO;
         _isEnigmatic = NO;
         self.currentBeatDuration = @(0);
+
+        [self startTimerThread];
     }
     return self;
 }
 
 - (void)stop
 {
-    if (_tmrBeat) {
-        [_tmrBeat invalidate];
-        _tmrBeat = nil;
-    }
+    nextBeatTimeUSec = 0;
+    isTimerRunning = NO;
 }
 
 - (void)onTap
@@ -97,6 +109,11 @@
     return 60.0f / self.currentBeatDuration.floatValue;
 }
 
+- (void)dealloc
+{
+    [self stop];
+}
+
 
 #pragma mark internal
 
@@ -112,9 +129,6 @@
 
 - (void)scheduleNextBeat
 {
-    [self stop];
-    // don't use a repeating timer because the duration could change between timer fires.
-    
     if (_isEnigmatic) {
         float randf = (float)rand() / (float)RAND_MAX;
         if (randf < 0.2f) {
@@ -134,7 +148,29 @@
         float randf = (float)rand() / (float)RAND_MAX;
         untilNextBeat *= (0.7f + (0.6f * randf));
     }
-    _tmrBeat = [NSTimer scheduledTimerWithTimeInterval:untilNextBeat target:self selector:@selector(beat) userInfo:nil repeats:NO];
+    nextBeatTimeUSec = currentTimeUSec() + (untilNextBeat * 1000000);
+}
+
+- (void)startTimerThread
+{
+    // reset / init
+    [self stop];
+
+    // separate timer thread
+    isTimerRunning = YES;
+    [NSThread detachNewThreadSelector:@selector(runTimer) toTarget:self withObject:nil];
+}
+
+- (void)runTimer
+{
+    while (isTimerRunning) {
+        long now = currentTimeUSec();
+        if (now >= nextBeatTimeUSec) {
+            [self beat];
+        }
+        useconds_t sleepDuration = (unsigned int) MAX(1, 1000 - (currentTimeUSec() - now));
+        usleep(sleepDuration);
+    }
 }
 
 @end

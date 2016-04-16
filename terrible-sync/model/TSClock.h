@@ -15,6 +15,9 @@
 
 @protocol TSClockDelegate <NSObject>
 
+/**
+ *  Not called on main thread!
+ */
 - (void)clockDidBeat: (TSClock *)clock;
 
 @optional
