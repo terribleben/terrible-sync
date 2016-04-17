@@ -127,27 +127,29 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
 
 #pragma mark delegate
 
-- (void)clockDidBeat:(TSClock *)clock
+- (void)clockDidBeat:(TSClock *)clock isPrimary:(BOOL)isPrimary
 {
     // generate a pulse
     [[TSPulseGen sharedInstance] pulse];
     
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // animate
-        [weakSelf.btnTap bounce];
+    if (isPrimary) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // animate
+            [weakSelf.btnTap bounce];
 
-        if (clock.isConfused) {
-            [weakSelf.btnConfused bounce];
-        }
-        if (clock.isAlarmed) {
-            [weakSelf.btnAlarmed bounce];
-        }
-        if (clock.isEnigmatic) {
-            [weakSelf.btnMystery bounce];
-            [weakSelf updateUI];
-        }
-    });
+            if (clock.isConfused) {
+                [weakSelf.btnConfused bounce];
+            }
+            if (clock.isAlarmed) {
+                [weakSelf.btnAlarmed bounce];
+            }
+            if (clock.isEnigmatic) {
+                [weakSelf.btnMystery bounce];
+                [weakSelf updateUI];
+            }
+        });
+    }
 }
 
 - (void)clock:(TSClock *)clock didUpdateTempo:(float)bpm

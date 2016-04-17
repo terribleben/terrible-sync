@@ -18,7 +18,7 @@
 /**
  *  Not called on main thread!
  */
-- (void)clockDidBeat: (TSClock *)clock;
+- (void)clockDidBeat: (TSClock *)clock isPrimary: (BOOL)isPrimary;
 
 @optional
 - (void)clock: (TSClock *)clock didUpdateTempo: (float)bpm;

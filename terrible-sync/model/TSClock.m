@@ -24,6 +24,7 @@ long currentTimeUSec()
     NSTimeInterval dtmLastLastTap;
 
     long nextBeatTimeUSec;
+    BOOL isNextBeatPrimary;
     BOOL isTimerRunning;
     dispatch_semaphore_t sThreadFinished;
 }
@@ -97,6 +98,7 @@ long currentTimeUSec()
         
         if (syncImmediately) {
             // schedule next beat immediately (to sync with tap)
+            isNextBeatPrimary = YES;
             nextBeatTimeUSec = currentTimeUSec();
         }
         
@@ -144,10 +146,11 @@ long currentTimeUSec()
 - (void)beat
 {
     if (_delegate) {
-        [_delegate clockDidBeat:self];
+        [_delegate clockDidBeat:self isPrimary:isNextBeatPrimary];
     }
     
     // continue beating
+    isNextBeatPrimary = !isNextBeatPrimary;
     [self scheduleNextBeat];
 }
 
@@ -182,6 +185,7 @@ long currentTimeUSec()
 
     // separate timer thread
     isTimerRunning = YES;
+    isNextBeatPrimary = YES;
     sThreadFinished = dispatch_semaphore_create(0);
     [NSThread detachNewThreadSelector:@selector(runTimer) toTarget:self withObject:nil];
 
