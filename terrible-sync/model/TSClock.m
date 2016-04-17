@@ -97,7 +97,7 @@ long currentTimeUSec()
         
         if (syncImmediately) {
             // schedule next beat immediately (to sync with tap)
-            [self scheduleNextBeat];
+            nextBeatTimeUSec = currentTimeUSec();
         }
         
         if (_delegate && [_delegate respondsToSelector:@selector(clock:didUpdateTempo:)]) {
