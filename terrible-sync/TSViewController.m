@@ -26,10 +26,14 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
 @property (nonatomic, strong) TSDancingButton *btnAlarmed;
 @property (nonatomic, strong) TSDancingButton *btnMystery;
 
+@property (nonatomic, strong) TSDancingButton *btnMute;
+@property (nonatomic, assign) BOOL isMuted;
+
 - (void)onTapBeat;
 - (void)onTapConfused;
 - (void)onTapAlarmed;
 - (void)onTapMystery;
+- (void)onTapMute;
 
 - (void)updateUI;
 - (void)appWillResign;
@@ -43,6 +47,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     if (self = [super init]) {
         self.clock = [[TSClock alloc] init];
         _clock.delegate = self;
+        _isMuted = NO;
     }
     return self;
 }
@@ -89,6 +94,14 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     UITapGestureRecognizer *tapMystery = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapMystery)];
     [_btnMystery addGestureRecognizer:tapMystery];
     
+    // mute button
+    self.btnMute = [[TSDancingButton alloc] initWithFrame:_btnConfused.frame];
+    [_btnMute.internalButton setTitle:@"😵" forState:UIControlStateNormal];
+    [self.view addSubview:_btnMute];
+    
+    UITapGestureRecognizer *tapMute = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapMute)];
+    [_btnMute addGestureRecognizer:tapMute];
+    
     // fire up the audio
     [TSPulseGen sharedInstance];
     
@@ -109,9 +122,10 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     [super viewWillLayoutSubviews];
     _btnTap.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.bounds.size.height * 0.4f);
     
-    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.22f, self.view.bounds.size.height - 64.0f);
-    _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.5f, _btnConfused.center.y);
-    _btnMystery.center = CGPointMake(self.view.bounds.size.width * 0.78f, _btnConfused.center.y);
+    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.13f, self.view.bounds.size.height - 64.0f);
+    _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.38f, _btnConfused.center.y);
+    _btnMystery.center = CGPointMake(self.view.bounds.size.width * 0.62f, _btnConfused.center.y);
+    _btnMute.center = CGPointMake(self.view.bounds.size.width * 0.87f, _btnConfused.center.y);
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -129,24 +143,30 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
 
 - (void)clockDidBeat:(TSClock *)clock isPrimary:(BOOL)isPrimary
 {
-    // generate a pulse
-    [[TSPulseGen sharedInstance] pulse];
+    if (!_isMuted) {
+        // generate a pulse
+        [[TSPulseGen sharedInstance] pulse];
+    }
     
     if (isPrimary) {
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             // animate
-            [weakSelf.btnTap bounce];
+            if (_isMuted) {
+                [weakSelf.btnMute bounce];
+            } else {
+                [weakSelf.btnTap bounce];
 
-            if (clock.isConfused) {
-                [weakSelf.btnConfused bounce];
-            }
-            if (clock.isAlarmed) {
-                [weakSelf.btnAlarmed bounce];
-            }
-            if (clock.isEnigmatic) {
-                [weakSelf.btnMystery bounce];
-                [weakSelf updateUI];
+                if (clock.isConfused) {
+                    [weakSelf.btnConfused bounce];
+                }
+                if (clock.isAlarmed) {
+                    [weakSelf.btnAlarmed bounce];
+                }
+                if (clock.isEnigmatic) {
+                    [weakSelf.btnMystery bounce];
+                    [weakSelf updateUI];
+                }
             }
         });
     }
@@ -194,6 +214,11 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
 {
     _clock.isEnigmatic = !_clock.isEnigmatic;
     [self updateUI];
+}
+
+- (void)onTapMute
+{
+    self.isMuted = !_isMuted;
 }
 
 - (void)updateUI
