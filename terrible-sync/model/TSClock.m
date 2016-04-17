@@ -7,6 +7,8 @@
 //
 
 #import "TSClock.h"
+
+@import UIKit.UIApplication;
 #import <sys/time.h>
 
 long currentTimeUSec()
@@ -23,6 +25,7 @@ long currentTimeUSec()
 
     long nextBeatTimeUSec;
     BOOL isTimerRunning;
+    dispatch_semaphore_t sThreadFinished;
 }
 
 @property (atomic, strong) NSNumber *currentBeatDuration;
@@ -47,6 +50,8 @@ long currentTimeUSec()
         self.currentBeatDuration = @(0);
 
         [self startTimerThread];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -55,6 +60,13 @@ long currentTimeUSec()
 {
     nextBeatTimeUSec = 0;
     isTimerRunning = NO;
+
+    if (sThreadFinished) {
+        // wait for timer thread to stop spinning
+        dispatch_semaphore_wait(sThreadFinished, DISPATCH_TIME_FOREVER);
+        sThreadFinished = nil;
+    }
+    return;
 }
 
 - (void)onTap
@@ -117,6 +129,18 @@ long currentTimeUSec()
 
 #pragma mark internal
 
+- (void)appWillResignActive
+{
+    // kill timer thread
+    [self stop];
+}
+
+- (void)appDidBecomeActive
+{
+    // restart timer
+    [self startTimerThread];
+}
+
 - (void)beat
 {
     if (_delegate) {
@@ -158,7 +182,10 @@ long currentTimeUSec()
 
     // separate timer thread
     isTimerRunning = YES;
+    sThreadFinished = dispatch_semaphore_create(0);
     [NSThread detachNewThreadSelector:@selector(runTimer) toTarget:self withObject:nil];
+
+    [self scheduleNextBeat];
 }
 
 - (void)runTimer
@@ -166,10 +193,14 @@ long currentTimeUSec()
     while (isTimerRunning) {
         long now = currentTimeUSec();
         if (now >= nextBeatTimeUSec) {
+            nextBeatTimeUSec = 0;
             [self beat];
         }
         useconds_t sleepDuration = (unsigned int) MAX(1, 1000 - (currentTimeUSec() - now));
         usleep(sleepDuration);
+    }
+    if (sThreadFinished) {
+        dispatch_semaphore_signal(sThreadFinished);
     }
 }
 
