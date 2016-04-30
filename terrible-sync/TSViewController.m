@@ -138,6 +138,11 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     return YES;
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return (UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskPortraitUpsideDown);
+}
+
 
 #pragma mark delegate
 
