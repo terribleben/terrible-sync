@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define TS_MIN_BPM 40.0f
+#define TS_MIN_BPM 20.0f
 #define TS_MAX_BPM 999.0f
 
 @class TSClock;

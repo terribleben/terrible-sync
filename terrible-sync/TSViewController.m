@@ -57,8 +57,11 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
     
+    BOOL isTablet = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    CGFloat refScreenWidth = (isTablet) ? 768.0f : 320.0f;
+
     // the big enormous button
-    self.btnTap = [[TSRotaryButton alloc] initWithFrame:CGRectMake(0, 0, 192.0f, 192.0f)];
+    self.btnTap = [[TSRotaryButton alloc] initWithFrame:CGRectMake(0, 0, refScreenWidth * 0.6f, refScreenWidth * 0.6f)];
     NSNumber *lastRotaryAngle = [[NSUserDefaults standardUserDefaults] objectForKey:kTSLastRotaryAngleUserDefaultsKey];
     if (lastRotaryAngle) {
         _btnTap.angle = [lastRotaryAngle floatValue];
@@ -71,7 +74,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     [_btnTap addGestureRecognizer:tapButton];
     
     // confused button
-    self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, 66.0f, 66.0f)];
+    self.btnConfused = [[TSDancingButton alloc] initWithFrame:CGRectMake(0, 0, refScreenWidth * 0.2f, refScreenWidth * 0.2f)];
     [_btnConfused.internalButton setTitle:@"?" forState:UIControlStateNormal];
     [self.view addSubview:_btnConfused];
     
@@ -122,7 +125,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     [super viewWillLayoutSubviews];
     _btnTap.center = CGPointMake(CGRectGetMidX(self.view.bounds), self.view.bounds.size.height * 0.4f);
     
-    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.13f, self.view.bounds.size.height - 64.0f);
+    _btnConfused.center = CGPointMake(self.view.bounds.size.width * 0.13f, self.view.bounds.size.height * 0.88f);
     _btnAlarmed.center = CGPointMake(self.view.bounds.size.width * 0.38f, _btnConfused.center.y);
     _btnMystery.center = CGPointMake(self.view.bounds.size.width * 0.62f, _btnConfused.center.y);
     _btnMute.center = CGPointMake(self.view.bounds.size.width * 0.87f, _btnConfused.center.y);

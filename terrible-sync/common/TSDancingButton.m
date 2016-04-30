@@ -27,6 +27,8 @@ CGFloat const kTSDancingButtonBounceDuration = 0.25f;
         self.backgroundColor = [UIColor clearColor];
         self.clipsToBounds = NO;
         
+        BOOL isTablet = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+
         // animation view
         self.vBounceAnimation = [[UIView alloc] init];
         _vBounceAnimation.backgroundColor = [UIColor whiteColor];
@@ -37,15 +39,15 @@ CGFloat const kTSDancingButtonBounceDuration = 0.25f;
         self.internalButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _internalButton.clipsToBounds = YES;
         _internalButton.backgroundColor = [UIColor blackColor];
-        _internalButton.layer.borderWidth = 6.0f / [UIScreen mainScreen].scale;
+        _internalButton.layer.borderWidth = (isTablet) ? 9.0f : 6.0f / [UIScreen mainScreen].scale;
         _internalButton.layer.borderColor = [UIColor redColor].CGColor;
-        _internalButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:24.0f];
+        _internalButton.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:((isTablet) ? 48.0f : 24.0f)];
         [_internalButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self addSubview:_internalButton];
         
         // subtitle label
         self.lblSubtitle = [[UILabel alloc] init];
-        _lblSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10.0f];
+        _lblSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:((isTablet) ? 20.0f : 10.0f)];
         _lblSubtitle.textColor = [UIColor lightGrayColor];
         _lblSubtitle.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_lblSubtitle];
