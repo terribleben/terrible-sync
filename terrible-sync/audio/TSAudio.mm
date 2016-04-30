@@ -54,15 +54,12 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 
 
 @implementation TSAudio
-@synthesize enableMic = _enableMic, overrideToSpeaker = _overrideToSpeaker, sampleRate = _sampleRate, bufferSize = _bufferSize, audioUnit, hasMic;
-
 
 #pragma mark TSAudio lifecycle
 
 - (id) initWithSampleRate: (double)sampleRate bufferSize: (unsigned short)bufferSize callback: (AudioCallback)callback userData:(void*)data
 {
     if (self = [super init]) {
-        _enableMic = NO;
         _overrideToSpeaker = NO;
         isSessionActive = NO;
 
@@ -94,6 +91,8 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     NSError* err = nil;
     
     // push our parameters into the AVAudioSession
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&err];
+
     [[AVAudioSession sharedInstance] setPreferredSampleRate:_sampleRate error:&err];
     if (err) 
         [self AudioLog:@"failed to set sample rate to %lf: %@", _sampleRate, err.description];
@@ -120,12 +119,10 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
                                                  name:AVAudioSessionInterruptionNotification
                                                object:nil];
     
-    // microphone?
-    hasMic = [AVAudioSession sharedInstance].inputAvailable;
-    
+
     // configure and start audio unit
     if ([self configureAudio]) {
-        OSStatus err = AudioOutputUnitStart(audioUnit);
+        OSStatus err = AudioOutputUnitStart(_audioUnit);
         if (err != kAudioSessionNoError) {
             [self AudioLog:@"failed to start audio unit"];
             return NO;
@@ -150,7 +147,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     desc.componentFlagsMask = 0;
     
     // open remote I/O unit with a component matching our description
-    err = AudioComponentInstanceNew(AudioComponentFindNext(NULL, &desc), &audioUnit);
+    err = AudioComponentInstanceNew(AudioComponentFindNext(NULL, &desc), &_audioUnit);
     if (err) {
         [self AudioLog:@"failed to open the remote I/O unit"];
         return NO;
@@ -158,7 +155,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     
     // if there's a mic, enable it
     UInt32 micAvailable = [AVAudioSession sharedInstance].inputAvailable;
-    err = AudioUnitSetProperty(audioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1, &micAvailable, sizeof(micAvailable));
+    err = AudioUnitSetProperty(_audioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1, &micAvailable, sizeof(micAvailable));
     if (err) {
         [self AudioLog:@"failed to enable mic on the remote I/O unit"];
         return NO;
@@ -168,7 +165,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     AURenderCallbackStruct renderProc;
     renderProc.inputProc = inputProc;
     renderProc.inputProcRefCon = (__bridge void*)self;
-    err = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &renderProc, sizeof(renderProc));
+    err = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, 0, &renderProc, sizeof(renderProc));
     if (err) {
         [self AudioLog:@"failed to set callback"];
         return NO;
@@ -181,7 +178,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     }
     
     // ok, ready to initialize
-    err = AudioUnitInitialize(audioUnit);
+    err = AudioUnitInitialize(_audioUnit);
     if (err) {
         [self AudioLog:@"failed to initialize the remote I/O unit"];
         return NO;
@@ -212,7 +209,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     AudioStreamBasicDescription localFormat;
     
     UInt32 size = sizeof(localFormat);
-    err = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &localFormat, &size);
+    err = AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &localFormat, &size);
     if (err) {
         [self AudioLog:@"couldn't get the remote I/O unit's output client format"];
         return NO;
@@ -229,7 +226,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     localFormat.mBitsPerChannel = 32;
     
     // set stream property
-    err = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &localFormat, sizeof(localFormat));
+    err = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &localFormat, sizeof(localFormat));
     if (err) {
         [self AudioLog:@"couldn't set the remote I/O unit's input client format"];
         return NO;
@@ -238,12 +235,12 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     // get and set it again.
     // for some reason this is necessary; TODO check back some other day and see if it works without it.
     size = sizeof(desiredFormat);
-    err = AudioUnitGetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &desiredFormat, &size);
+    err = AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &desiredFormat, &size);
     if (err) {
         [self AudioLog:@"couldn't get the remote I/O unit's output client format"];
         return NO;
     }
-    err = AudioUnitSetProperty(audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &desiredFormat, sizeof(desiredFormat));
+    err = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &desiredFormat, sizeof(desiredFormat));
     if (err) {
         [self AudioLog:@"couldn't set the remote I/O unit's output client format"];
         return NO;
@@ -260,12 +257,12 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     OSStatus err = kAudioSessionNoError;
     
     // tear down the audio unit
-    err = AudioOutputUnitStop(audioUnit);
+    err = AudioOutputUnitStop(_audioUnit);
     if (err) {
         [self AudioLog:@"failed to stop the audio unit"];
         return NO;
     }
-    err = AudioComponentInstanceDispose(audioUnit);
+    err = AudioComponentInstanceDispose(_audioUnit);
     if (err) {
         [self AudioLog:@"failed to dispose of the audio unit"];
         return NO;
@@ -317,24 +314,6 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
         [self AudioLog:@"failed to set override to speaker to %d", overrideToSpeaker];
 }
 
-- (void) setEnableMic: (BOOL)enableMic
-{
-    NSError* err = nil;
-    _enableMic = enableMic;
-    
-    // is there a mic to use?
-    hasMic = [AVAudioSession sharedInstance].inputAvailable;
-    
-    if (hasMic && _enableMic)
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error:&err];
-    else
-        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error:&err];
-    
-    if (err) {
-        [self AudioLog:@"failed to %@ mic input: %@", (enableMic ? @"enable" : @"disable"), err.description];
-    }
-}
-
 
 
 #pragma mark audio listeners
@@ -347,9 +326,6 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
     // reestablish speaker override if necessary
     if (_overrideToSpeaker)
         [self setOverrideToSpeaker:YES];
-    
-    // reestablish mic input if necessary
-    [self setEnableMic:_enableMic];
 }
 
 - (void) handleAudioInterruption:(NSNotification *)notification
@@ -430,26 +406,12 @@ void convertAUFromFloat(AudioBufferList* input, Float32* buffer, UInt32 numFrame
 OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList* ioData) {
     OSStatus err = kAudioSessionNoError;
     TSAudio* theAudio = (__bridge TSAudio*)inRefCon;
-    
-    // render mic input
-    if (theAudio.hasMic && theAudio.enableMic) {
-        err = AudioUnitRender(theAudio.audioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
-        if (err) {
-            if (TS_AUDIO_VERBOSE)
-                fprintf(stdout, "Audio: input render procedure encountered error %d\n", (int)err);
-            return err;
-        }
-    }
 
-    // convert mic input to float, or just write zeroes if there's no mic
     UInt32 numFramesRendered = 0;
+    // (we could render audio input here if we cared about it)
     
-    if (theAudio.hasMic && theAudio.enableMic)
-        convertAUToFloat(ioData, theFloatBuffer, TS_AUDIO_MAX_BUFFER_SIZE, &numFramesRendered);
-    else {
-        memset(theFloatBuffer, 0, inNumberFrames * TS_AUDIO_NUM_CHANNELS * sizeof(Sample));
-        numFramesRendered = inNumberFrames;
-    }
+    memset(theFloatBuffer, 0, inNumberFrames * TS_AUDIO_NUM_CHANNELS * sizeof(Sample));
+    numFramesRendered = inNumberFrames;
 
     // total num frames sent to the audio callback to be processed
     UInt32 numFramesSent = 0;

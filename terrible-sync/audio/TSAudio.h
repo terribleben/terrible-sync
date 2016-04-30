@@ -26,11 +26,9 @@
 - (BOOL) resumeSession;
 
 @property (nonatomic, assign) BOOL overrideToSpeaker;
-@property (nonatomic, assign) BOOL enableMic;
 
 @property (nonatomic, readonly) double sampleRate;
 @property (nonatomic, readonly) UInt16 bufferSize;
-@property (nonatomic, readonly) BOOL hasMic;
 
 @property (nonatomic, readwrite) AudioUnit audioUnit;
 
