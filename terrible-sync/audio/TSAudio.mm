@@ -32,9 +32,6 @@ static Float32 theFloatBuffer[TS_AUDIO_MAX_BUFFER_SIZE * TS_AUDIO_NUM_CHANNELS];
  */
 OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, const AudioTimeStamp* inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList* ioData);
 
-
-#pragma mark actual class definition
-
 @interface TSAudio () <AVAudioSessionDelegate>
 {
     BOOL isSessionActive;
@@ -55,7 +52,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 
 @implementation TSAudio
 
-#pragma mark TSAudio lifecycle
+#pragma mark - TSAudio lifecycle
 
 - (id) initWithSampleRate: (double)sampleRate bufferSize: (unsigned short)bufferSize callback: (AudioCallback)callback userData:(void*)data
 {
@@ -153,14 +150,6 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
         return NO;
     }
     
-    // if there's a mic, enable it
-    UInt32 micAvailable = [AVAudioSession sharedInstance].inputAvailable;
-    err = AudioUnitSetProperty(_audioUnit, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Input, 1, &micAvailable, sizeof(micAvailable));
-    if (err) {
-        [self AudioLog:@"failed to enable mic on the remote I/O unit"];
-        return NO;
-    }
-    
     // wire up our render callback
     AURenderCallbackStruct renderProc;
     renderProc.inputProc = inputProc;
@@ -232,20 +221,6 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
         return NO;
     }
     
-    // get and set it again.
-    // for some reason this is necessary; TODO check back some other day and see if it works without it.
-    size = sizeof(desiredFormat);
-    err = AudioUnitGetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &desiredFormat, &size);
-    if (err) {
-        [self AudioLog:@"couldn't get the remote I/O unit's output client format"];
-        return NO;
-    }
-    err = AudioUnitSetProperty(_audioUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 1, &desiredFormat, sizeof(desiredFormat));
-    if (err) {
-        [self AudioLog:@"couldn't set the remote I/O unit's output client format"];
-        return NO;
-    }
-    
     return YES;
 }
 
@@ -288,7 +263,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 
 
 
-#pragma mark external properties
+#pragma mark - external properties
 
 // if we are outputting and reading audio at the same time, iOS will route to headphones.
 // set this to true to override that behavior.
@@ -316,7 +291,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 
 
 
-#pragma mark audio listeners
+#pragma mark - audio notif listeners
 
 - (void) handleAudioRouteChange:(NSNotification *)notification
 {
@@ -349,7 +324,7 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 }
 
 
-#pragma mark misc log method
+#pragma mark - misc log method
 
 - (void) AudioLog: (NSString*)str, ...
 {
@@ -368,11 +343,9 @@ OSStatus inputProc(void* inRefCon, AudioUnitRenderActionFlags* ioActionFlags, co
 
 
 
-#pragma mark the dirty c stuff
-
+#pragma mark - c callbacks
 
 void convertAUToFloat(AudioBufferList* input, Float32* buffer, UInt32 numFrames, UInt32* actualFrames) {
-    
     assert(input->mNumberBuffers == TS_AUDIO_NUM_CHANNELS);
     UInt32 inFrames = input->mBuffers[0].mDataByteSize / 4; // sizeof(SInt32) == 4
     assert(inFrames <= numFrames);
@@ -389,7 +362,6 @@ void convertAUToFloat(AudioBufferList* input, Float32* buffer, UInt32 numFrames,
 
 
 void convertAUFromFloat(AudioBufferList* input, Float32* buffer, UInt32 numFrames) {
-
     assert(input->mNumberBuffers == TS_AUDIO_NUM_CHANNELS);
     UInt32 inFrames = input->mBuffers[0].mDataByteSize / 4; // sizeof(SInt32) == 4
     assert(inFrames <= numFrames);

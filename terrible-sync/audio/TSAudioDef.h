@@ -22,6 +22,4 @@ typedef struct AudioSharedBuffer {
     size_t length;
 } AudioSharedBuffer;
 
-typedef std::complex<Sample> AudioComplex;
-
 #endif

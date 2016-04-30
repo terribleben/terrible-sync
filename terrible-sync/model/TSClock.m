@@ -175,7 +175,7 @@ long currentTimeUSec()
         float randf = (float)rand() / (float)RAND_MAX;
         untilNextBeat *= (0.7f + (0.6f * randf));
     }
-    nextBeatTimeUSec = currentTimeUSec() + (untilNextBeat * 1000000);
+    nextBeatTimeUSec = currentTimeUSec() + MAX(1000, untilNextBeat * 1000000);
 }
 
 - (void)startTimerThread
@@ -194,6 +194,7 @@ long currentTimeUSec()
 
 - (void)runTimer
 {
+    [NSThread setThreadPriority:1.0];
     while (isTimerRunning) {
         long now = currentTimeUSec();
         if (now >= nextBeatTimeUSec) {
