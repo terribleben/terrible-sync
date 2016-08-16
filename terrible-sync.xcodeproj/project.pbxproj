@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0449AF998A2ACA90C2A6A4F5 /* libPods-terrible-sync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6060FE4A1ACE8F7EE3284C79 /* libPods-terrible-sync.a */; };
 		B5606C8F1C5AA58F009D935F /* UIView+TS.m in Sources */ = {isa = PBXBuildFile; fileRef = B5606C8E1C5AA58F009D935F /* UIView+TS.m */; };
 		B5A83C251CC2CC5F00716EFB /* TSRotaryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A83C241CC2CC5F00716EFB /* TSRotaryButton.m */; };
 		B5C387731B6AD1A90009A7CC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5C387721B6AD1A90009A7CC /* Images.xcassets */; };
@@ -34,6 +35,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14E29BFED3DAA35502252C62 /* Pods-terrible-sync.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-terrible-sync.release.xcconfig"; path = "Pods/Target Support Files/Pods-terrible-sync/Pods-terrible-sync.release.xcconfig"; sourceTree = "<group>"; };
+		6060FE4A1ACE8F7EE3284C79 /* libPods-terrible-sync.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-terrible-sync.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A205E36A6A23381CDCC8579D /* Pods-terrible-sync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-terrible-sync.debug.xcconfig"; path = "Pods/Target Support Files/Pods-terrible-sync/Pods-terrible-sync.debug.xcconfig"; sourceTree = "<group>"; };
 		B5606C8D1C5AA58F009D935F /* UIView+TS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TS.h"; sourceTree = "<group>"; };
 		B5606C8E1C5AA58F009D935F /* UIView+TS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TS.m"; sourceTree = "<group>"; };
 		B5A83C231CC2CC5F00716EFB /* TSRotaryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSRotaryButton.h; sourceTree = "<group>"; };
@@ -70,6 +74,7 @@
 			files = (
 				B5C387AD1B6ADF3A0009A7CC /* AudioToolbox.framework in Frameworks */,
 				B5C387A71B6ADF060009A7CC /* AVFoundation.framework in Frameworks */,
+				0449AF998A2ACA90C2A6A4F5 /* libPods-terrible-sync.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,12 +88,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3D4A13EC1D42B919254EBA40 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A205E36A6A23381CDCC8579D /* Pods-terrible-sync.debug.xcconfig */,
+				14E29BFED3DAA35502252C62 /* Pods-terrible-sync.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9EDE986341C83340716A56AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6060FE4A1ACE8F7EE3284C79 /* libPods-terrible-sync.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B5C387591B6AD1A90009A7CC = {
 			isa = PBXGroup;
 			children = (
 				B5C387641B6AD1A90009A7CC /* terrible-sync */,
 				B5C3877E1B6AD1A90009A7CC /* terrible-syncTests */,
 				B5C387631B6AD1A90009A7CC /* Products */,
+				3D4A13EC1D42B919254EBA40 /* Pods */,
+				9EDE986341C83340716A56AE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -196,9 +220,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5C387851B6AD1A90009A7CC /* Build configuration list for PBXNativeTarget "terrible-sync" */;
 			buildPhases = (
+				6ED1A64399D1683C08C20F75 /* 📦 Check Pods Manifest.lock */,
 				B5C3875E1B6AD1A90009A7CC /* Sources */,
 				B5C3875F1B6AD1A90009A7CC /* Frameworks */,
 				B5C387601B6AD1A90009A7CC /* Resources */,
+				DE41D6C08258C2C93B81D779 /* 📦 Embed Pods Frameworks */,
+				C1DD2B4FE8C91A3FEFEFBE07 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -283,6 +310,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6ED1A64399D1683C08C20F75 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C1DD2B4FE8C91A3FEFEFBE07 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-terrible-sync/Pods-terrible-sync-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DE41D6C08258C2C93B81D779 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-terrible-sync/Pods-terrible-sync-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B5C3875E1B6AD1A90009A7CC /* Sources */ = {
@@ -403,6 +478,7 @@
 		};
 		B5C387861B6AD1A90009A7CC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A205E36A6A23381CDCC8579D /* Pods-terrible-sync.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -417,6 +493,7 @@
 		};
 		B5C387871B6AD1A90009A7CC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 14E29BFED3DAA35502252C62 /* Pods-terrible-sync.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
