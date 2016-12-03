@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0449AF998A2ACA90C2A6A4F5 /* libPods-terrible-sync.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6060FE4A1ACE8F7EE3284C79 /* libPods-terrible-sync.a */; };
 		B5606C8F1C5AA58F009D935F /* UIView+TS.m in Sources */ = {isa = PBXBuildFile; fileRef = B5606C8E1C5AA58F009D935F /* UIView+TS.m */; };
+		B5A4A8F11D63D2FE004EDBA0 /* TSOSCEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A4A8F01D63D2FE004EDBA0 /* TSOSCEncoder.m */; };
 		B5A83C251CC2CC5F00716EFB /* TSRotaryButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A83C241CC2CC5F00716EFB /* TSRotaryButton.m */; };
 		B5C387731B6AD1A90009A7CC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5C387721B6AD1A90009A7CC /* Images.xcassets */; };
 		B5C387821B6AD1A90009A7CC /* terrible_syncTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5C387811B6AD1A90009A7CC /* terrible_syncTests.m */; };
@@ -40,6 +41,8 @@
 		A205E36A6A23381CDCC8579D /* Pods-terrible-sync.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-terrible-sync.debug.xcconfig"; path = "Pods/Target Support Files/Pods-terrible-sync/Pods-terrible-sync.debug.xcconfig"; sourceTree = "<group>"; };
 		B5606C8D1C5AA58F009D935F /* UIView+TS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TS.h"; sourceTree = "<group>"; };
 		B5606C8E1C5AA58F009D935F /* UIView+TS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TS.m"; sourceTree = "<group>"; };
+		B5A4A8EF1D63D2FE004EDBA0 /* TSOSCEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSOSCEncoder.h; sourceTree = "<group>"; };
+		B5A4A8F01D63D2FE004EDBA0 /* TSOSCEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSOSCEncoder.m; sourceTree = "<group>"; };
 		B5A83C231CC2CC5F00716EFB /* TSRotaryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSRotaryButton.h; sourceTree = "<group>"; };
 		B5A83C241CC2CC5F00716EFB /* TSRotaryButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSRotaryButton.m; sourceTree = "<group>"; };
 		B5C387621B6AD1A90009A7CC /* terrible-sync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "terrible-sync.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +108,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B5A4A8EE1D63D2E9004EDBA0 /* osc */ = {
+			isa = PBXGroup;
+			children = (
+				B5A4A8EF1D63D2FE004EDBA0 /* TSOSCEncoder.h */,
+				B5A4A8F01D63D2FE004EDBA0 /* TSOSCEncoder.m */,
+			);
+			path = osc;
+			sourceTree = "<group>";
+		};
 		B5C387591B6AD1A90009A7CC = {
 			isa = PBXGroup;
 			children = (
@@ -135,6 +147,7 @@
 				B5C387721B6AD1A90009A7CC /* Images.xcassets */,
 				B5DEDA6C1B6C33DA00079B61 /* common */,
 				B5C3879E1B6ADD630009A7CC /* audio */,
+				B5A4A8EE1D63D2E9004EDBA0 /* osc */,
 				B5C387B41B6BF7B00009A7CC /* model */,
 				B5C387911B6AD2C00009A7CC /* supporting */,
 				B5C387B31B6AE5BC0009A7CC /* frameworks */,
@@ -373,6 +386,7 @@
 				B5DEDA6F1B6C340E00079B61 /* TSDancingButton.m in Sources */,
 				B5A83C251CC2CC5F00716EFB /* TSRotaryButton.m in Sources */,
 				B5C387A51B6ADDF00009A7CC /* TSAudio.mm in Sources */,
+				B5A4A8F11D63D2FE004EDBA0 /* TSOSCEncoder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

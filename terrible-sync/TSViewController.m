@@ -10,6 +10,7 @@
 #import "TSPulseGen.h"
 #import "TSClock.h"
 #import "TSDancingButton.h"
+#import "TSOSCEncoder.h"
 #import "TSRotaryButton.h"
 #import "UIView+TS.h"
 
@@ -19,6 +20,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
 @interface TSViewController () <TSClockDelegate, TSRotaryButtonDelegate>
 
 @property (nonatomic, strong) TSClock *clock;
+@property (nonatomic, assign) NSUInteger stepIndex;
 
 @property (nonatomic, strong) TSRotaryButton *btnTap;
 
@@ -48,6 +50,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
         self.clock = [[TSClock alloc] init];
         _clock.delegate = self;
         _isMuted = NO;
+        _stepIndex = 0;
     }
     return self;
 }
@@ -154,6 +157,7 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     if (!_isMuted) {
         // generate a pulse
         [[TSPulseGen sharedInstance] pulse];
+        [[TSOSCEncoder sharedInstance] broadcastStepWithId:@(_stepIndex++)];
     }
     
     if (isPrimary) {
