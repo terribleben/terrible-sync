@@ -10,6 +10,8 @@
 #import "F53OSC.h"
 
 NSString * const kTSCOSCAddressPatternBase = @"ts";
+NSString * const kTSOSCHostKey = @"TSOSCHost";
+NSString * const kTSOSCPortKey = @"TSOSCPort";
 
 @interface TSOSCEncoder ()
 
@@ -34,10 +36,14 @@ NSString * const kTSCOSCAddressPatternBase = @"ts";
 - (instancetype)init
 {
     if (self = [super init]) {
-        _oscClient = [[F53OSCClient alloc] init];
-        _oscClient.host = @"192.168.0.102"; // TODO: kill me
-        _oscClient.port = 4242;
-        [_oscClient connect];
+        NSString *oscHost = [[[NSBundle mainBundle] infoDictionary] objectForKey:kTSOSCHostKey];
+        NSNumber *oscPort = [[[NSBundle mainBundle] infoDictionary] objectForKey:kTSOSCPortKey];
+        if (oscHost) {
+            _oscClient = [[F53OSCClient alloc] init];
+            _oscClient.host = oscHost;
+            _oscClient.port = (oscPort) ? oscPort.integerValue : 4242;
+            [_oscClient connect];
+        }
     }
     return self;
 }
@@ -57,16 +63,19 @@ NSString * const kTSCOSCAddressPatternBase = @"ts";
 
 - (void)_sendMessageWithRelativeAddress:(NSString *)address arguments:(NSArray *)arguments
 {
-    NSString *addressPattern = [NSString stringWithFormat:@"/%@/%@", kTSCOSCAddressPatternBase, address];
-    F53OSCMessage *message = [F53OSCMessage messageWithAddressPattern:addressPattern arguments:arguments];
-    [_oscClient sendPacket:message];
+    if (_oscClient) {
+        NSString *addressPattern = [NSString stringWithFormat:@"/%@/%@", kTSCOSCAddressPatternBase, address];
+        F53OSCMessage *message = [F53OSCMessage messageWithAddressPattern:addressPattern arguments:arguments];
+        [_oscClient sendPacket:message];
+    }
 }
 
 - (void)_disconnect
 {
-    if (_oscClient.isConnected) {
+    if (_oscClient && _oscClient.isConnected) {
         [_oscClient disconnect];
     }
+    _oscClient = nil;
 }
 
 @end
