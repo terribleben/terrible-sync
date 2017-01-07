@@ -23,13 +23,13 @@ long currentTimeUSec()
     NSTimeInterval dtmLastTap;
     NSTimeInterval dtmLastLastTap;
 
-    long nextBeatTimeUSec;
     BOOL isNextBeatPrimary;
     BOOL isTimerRunning;
     dispatch_semaphore_t sThreadFinished;
 }
 
 @property (atomic, strong) NSNumber *currentBeatDuration;
+@property (atomic, assign) long nextBeatTimeUSec;
 
 - (void)scheduleNextBeat;
 - (void)beat;
@@ -59,7 +59,7 @@ long currentTimeUSec()
 
 - (void)stop
 {
-    nextBeatTimeUSec = 0;
+    self.nextBeatTimeUSec = 0;
     isTimerRunning = NO;
 
     if (sThreadFinished) {
@@ -99,7 +99,7 @@ long currentTimeUSec()
         if (syncImmediately) {
             // schedule next beat immediately (to sync with tap)
             isNextBeatPrimary = YES;
-            nextBeatTimeUSec = currentTimeUSec();
+            self.nextBeatTimeUSec = currentTimeUSec();
         }
         
         if (_delegate && [_delegate respondsToSelector:@selector(clock:didUpdateTempo:)]) {
@@ -178,7 +178,7 @@ long currentTimeUSec()
         float randf = (float)rand() / (float)RAND_MAX;
         untilNextBeat *= (0.7f + (0.6f * randf));
     }
-    nextBeatTimeUSec = currentTimeUSec() + MAX(1000, untilNextBeat * 1000000);
+    self.nextBeatTimeUSec = currentTimeUSec() + MAX(1000, untilNextBeat * 1000000);
 }
 
 - (void)startTimerThread
@@ -200,8 +200,8 @@ long currentTimeUSec()
     [NSThread setThreadPriority:1.0];
     while (isTimerRunning) {
         long now = currentTimeUSec();
-        if (now >= nextBeatTimeUSec) {
-            nextBeatTimeUSec = 0;
+        if (now >= self.nextBeatTimeUSec) {
+            self.nextBeatTimeUSec = 0;
             [self beat];
         }
         useconds_t sleepDuration = (unsigned int) MAX(1, 1000 - (currentTimeUSec() - now));
