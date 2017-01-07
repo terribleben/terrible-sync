@@ -157,10 +157,13 @@ long currentTimeUSec()
 - (void)scheduleNextBeat
 {
     if (_isEnigmatic) {
+        float enigmaticUpperBpm = TS_MAX_BPM * 0.33f;
         float randf = (float)rand() / (float)RAND_MAX;
-        if (randf < 0.2f) {
+        // less likely to change when at a high tempo
+        float shouldChangeThreshold = 0.3f - (0.2f * (([self currentBpm] - TS_MIN_BPM) / (enigmaticUpperBpm - TS_MIN_BPM)));
+        if (randf < shouldChangeThreshold) {
             randf = (float)rand() / (float)RAND_MAX;
-            float newBpm = TS_MIN_BPM + (randf * ((TS_MAX_BPM * 0.33f) - TS_MIN_BPM));
+            float newBpm = TS_MIN_BPM + (randf * ((enigmaticUpperBpm) - TS_MIN_BPM));
             self.currentBeatDuration = @(60.0f / newBpm);
         }
     }
