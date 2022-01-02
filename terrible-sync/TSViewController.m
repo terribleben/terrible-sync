@@ -163,21 +163,24 @@ NSString * const kTSLastRotaryAngleUserDefaultsKey = @"TSRotaryAngleUserDefaults
     if (isPrimary) {
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            // animate
-            if (_isMuted) {
-                [weakSelf.btnMute bounce];
-            } else {
-                [weakSelf.btnTap bounce];
+            __strong typeof(self) strongSelf = weakSelf;
+            if (strongSelf) {
+                // animate
+                if (weakSelf.isMuted) {
+                    [weakSelf.btnMute bounce];
+                } else {
+                    [weakSelf.btnTap bounce];
 
-                if (clock.isConfused) {
-                    [weakSelf.btnConfused bounce];
-                }
-                if (clock.isAlarmed) {
-                    [weakSelf.btnAlarmed bounce];
-                }
-                if (clock.isEnigmatic) {
-                    [weakSelf.btnMystery bounce];
-                    [weakSelf updateUI];
+                    if (clock.isConfused) {
+                        [weakSelf.btnConfused bounce];
+                    }
+                    if (clock.isAlarmed) {
+                        [weakSelf.btnAlarmed bounce];
+                    }
+                    if (clock.isEnigmatic) {
+                        [weakSelf.btnMystery bounce];
+                        [weakSelf updateUI];
+                    }
                 }
             }
         });
